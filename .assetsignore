@@ -6,3 +6,6 @@ package-lock.json
 wrangler.jsonc
 README.md
 .assetsignore
+.gitignore
+.env
+.env.*
