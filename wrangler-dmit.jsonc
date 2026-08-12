@@ -4,5 +4,8 @@
   "assets": {
     "directory": "./dmit",
     "not_found_handling": "404-page"
-  }
+  },
+  "routes": [
+    { "pattern": "dmit.manikagoel.com", "custom_domain": true }
+  ]
 }
