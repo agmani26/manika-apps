@@ -4,6 +4,7 @@ node_modules
 package.json
 package-lock.json
 wrangler.jsonc
+wrangler-dmit.jsonc
 README.md
 .assetsignore
 .gitignore

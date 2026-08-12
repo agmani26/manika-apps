@@ -1,0 +1,8 @@
+{
+  "name": "manika-dmit",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "directory": "./dmit",
+    "not_found_handling": "404-page"
+  }
+}
