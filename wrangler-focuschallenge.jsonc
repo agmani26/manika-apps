@@ -1,0 +1,11 @@
+{
+  "name": "manika-focuschallenge",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "directory": "./focus-challenge-hub-selfstart",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "focuschallenge.manikagoel.com", "custom_domain": true }
+  ]
+}
