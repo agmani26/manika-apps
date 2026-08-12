@@ -5,5 +5,9 @@
   "assets": {
     "directory": "./",
     "not_found_handling": "404-page"
-  }
+  },
+  "routes": [
+    { "pattern": "apps.manikagoel.com", "custom_domain": true },
+    { "pattern": "manikagoel.com", "custom_domain": true }
+  ]
 }
