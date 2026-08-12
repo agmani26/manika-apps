@@ -1,0 +1,342 @@
+<title>Focus Reset Challenge — Daily Videos</title>
+<style>
+  :root {
+    --bg: #f2f4f1;
+    --surface: #ffffff;
+    --ink: #1c2624;
+    --ink-soft: #5b6864;
+    --ink-faint: #8b9591;
+    --accent: #3e6b5c;
+    --accent-ink: #ffffff;
+    --warm: #c97a35;
+    --warm-soft: #f4e6d6;
+    --line: rgba(28, 38, 36, 0.12);
+    --locked-bg: #eceeec;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141d1a;
+      --surface: #1b2622;
+      --ink: #edefea;
+      --ink-soft: #a9b3ae;
+      --ink-faint: #6d7975;
+      --accent: #74ab97;
+      --accent-ink: #0f1815;
+      --warm: #e3a25e;
+      --warm-soft: #33291d;
+      --line: rgba(237, 239, 234, 0.12);
+      --locked-bg: #202b27;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #141d1a;
+    --surface: #1b2622;
+    --ink: #edefea;
+    --ink-soft: #a9b3ae;
+    --ink-faint: #6d7975;
+    --accent: #74ab97;
+    --accent-ink: #0f1815;
+    --warm: #e3a25e;
+    --warm-soft: #33291d;
+    --line: rgba(237, 239, 234, 0.12);
+    --locked-bg: #202b27;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #f2f4f1;
+    --surface: #ffffff;
+    --ink: #1c2624;
+    --ink-soft: #5b6864;
+    --ink-faint: #8b9591;
+    --accent: #3e6b5c;
+    --accent-ink: #ffffff;
+    --warm: #c97a35;
+    --warm-soft: #f4e6d6;
+    --line: rgba(28, 38, 36, 0.12);
+    --locked-bg: #eceeec;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 48px 24px 72px;
+  }
+
+  header {
+    margin-bottom: 40px;
+  }
+
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-family: Georgia, "Iowan Old Style", ui-serif, serif;
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+    font-weight: 400;
+    margin: 0 0 12px;
+    text-wrap: balance;
+    color: var(--ink);
+  }
+
+  .lede {
+    color: var(--ink-soft);
+    font-size: 0.98rem;
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  .progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--locked-bg);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 14.3%;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+
+  .progress-label {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .days {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .day {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .day.locked {
+    background: var(--locked-bg);
+    border-color: transparent;
+  }
+
+  .day-num {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+    letter-spacing: 0.03em;
+    width: 44px;
+    flex-shrink: 0;
+  }
+
+  .day.available .day-num {
+    color: var(--accent);
+  }
+
+  .day-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .day-title {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 2px;
+  }
+
+  .day.locked .day-title {
+    color: var(--ink-faint);
+  }
+
+  .day-sub {
+    font-size: 0.84rem;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .day.locked .day-sub {
+    color: var(--ink-faint);
+  }
+
+  .day-action {
+    flex-shrink: 0;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 9px 16px;
+    border-radius: 7px;
+    white-space: nowrap;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .pill-locked {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    font-weight: 600;
+    padding: 9px 14px;
+  }
+
+  .pill-today {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--warm);
+    background: var(--warm-soft);
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+    color: var(--ink-faint);
+  }
+
+  footer p { margin: 0 0 6px; }
+</style>
+
+<div class="page">
+  <header>
+    <p class="eyebrow">7-Day Focus Reset Challenge</p>
+    <h1>Your daily practice, one video at a time.</h1>
+    <p class="lede">
+      A new video unlocks here each day. Watch it with your child the same day —
+      the exercises build on each other, so don't skip ahead.
+    </p>
+    <div class="progress">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <span class="progress-label" id="progress-label">Day 0 of 7</span>
+    </div>
+  </header>
+
+  <div class="days" id="days"></div>
+
+  <footer>
+    <p>Trouble with a link? Message Manika directly on WhatsApp.</p>
+    <p>Focus Reset Challenge · Manika Goel, Mind Performance Coach</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // Unlock dates are IST calendar days. Day 0 (intro) goes out 2026-08-04,
+  // each following day unlocks one calendar day later.
+  var days = [
+    { day: 0, unlock: "2026-08-04", video: "https://youtu.be/Jrdhp34q-vI", label: "Welcome to the Challenge", sub: "Intro · Watch this first, before Day 1" },
+    { day: 1, unlock: "2026-08-05", video: "https://youtu.be/s3o-KvLMm78", label: "Day 1", sub: "" },
+    { day: 2, unlock: "2026-08-06", video: "https://youtu.be/HRyIgq9-KU0", label: "Day 2", sub: "" },
+    { day: 3, unlock: "2026-08-07", video: "https://youtu.be/wh8pH5AW50o", label: "Day 3", sub: "" },
+    { day: 4, unlock: "2026-08-08", video: "https://youtu.be/4EP2BRijNQI", label: "Day 4", sub: "" },
+    { day: 5, unlock: "2026-08-09", video: "https://youtu.be/mtV2scrVToE", label: "Day 5", sub: "" },
+    { day: 6, unlock: "2026-08-10", video: "https://youtu.be/PNXPWCwVKp8", label: "Day 6", sub: "" },
+    { day: 7, unlock: "2026-08-11", video: "https://youtu.be/Hk8NIHx4dXk", label: "Day 7 · Final wrap-up", sub: "" }
+  ];
+
+  function todayIST() {
+    var now = new Date();
+    var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+    var ist = new Date(utcMs + 5.5 * 60 * 60000);
+    var y = ist.getFullYear();
+    var m = String(ist.getMonth() + 1).padStart(2, "0");
+    var d = String(ist.getDate()).padStart(2, "0");
+    return y + "-" + m + "-" + d;
+  }
+
+  var today = todayIST();
+  var container = document.getElementById("days");
+  var unlockedCount = 0;
+
+  days.forEach(function (d) {
+    var isUnlocked = d.unlock <= today;
+    var isToday = d.unlock === today;
+    if (isUnlocked) unlockedCount++;
+
+    var el = document.createElement("div");
+    el.className = "day" + (isUnlocked ? " available" : " locked");
+
+    var numLabel = "DAY " + String(d.day).padStart(2, "0");
+
+    var actionHtml;
+    if (isUnlocked) {
+      actionHtml = d.video
+        ? '<a class="btn" href="' + d.video + '" target="_blank" rel="noopener">Watch →</a>'
+        : '<span class="pill-locked">Coming soon</span>';
+    } else {
+      actionHtml = '<span class="pill-locked">🔒 Locked</span>';
+    }
+
+    var titleHtml = isUnlocked
+      ? (d.label || ("Day " + d.day)) + (isToday ? '<span class="pill-today">Today</span>' : "")
+      : "Unlocks Day " + d.day;
+
+    var subHtml = isUnlocked && d.sub ? d.sub : "&nbsp;";
+
+    el.innerHTML =
+      '<span class="day-num">' + numLabel + "</span>" +
+      '<div class="day-body">' +
+        '<p class="day-title">' + titleHtml + "</p>" +
+        '<p class="day-sub">' + subHtml + "</p>" +
+      "</div>" +
+      '<div class="day-action">' + actionHtml + "</div>";
+
+    container.appendChild(el);
+  });
+
+  var challengeDaysUnlocked = Math.max(unlockedCount - 1, 0);
+  document.getElementById("progress-fill").style.width = (challengeDaysUnlocked / 7 * 100) + "%";
+  document.getElementById("progress-label").textContent = "Day " + challengeDaysUnlocked + " of 7";
+})();
+</script>
