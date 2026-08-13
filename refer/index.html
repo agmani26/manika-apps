@@ -4,29 +4,25 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Refer a parent — Manika Goel</title>
-<meta name="description" content="For parents who've already done DMIT. Pass it on to a parent who needs it." />
+<meta name="description" content="For parents who've already done DMIT with me." />
 <meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
 <!-- =========================================================
-     MANIKA — EDIT THESE THREE LINES AND NOTHING ELSE
+     MANIKA — THE ONLY LINES YOU'D EVER NEED TO EDIT
      ========================================================= -->
 <script>
   const CONFIG = {
-    // Your WhatsApp number, country code, no + and no spaces.
+    // Your WhatsApp number. Referrals arrive here.
     whatsapp: "919811991428",
 
-    // Independence Day offer closes at the END of this date (IST).
-    // Change to "2026-08-17" if you want to extend to Independence Week.
-    offerEnds: "2026-08-15",
+    // Last day of the Independence Day referral offer (IST).
+    offerEnds: "2026-08-20",
 
-    // Referral commission — % of what THAT parent paid for their own DMIT.
-    commissionPct: 20,
-
-    // Where the referred parent lands.
-    dmitUrl: "https://dmit.manikagoel.com/"
+    // Your commission to the referrer.
+    percent: 20
   };
 </script>
 
@@ -40,8 +36,9 @@
     --teal-soft:#DCEAE7;
     --gold:#BE9440;
     --gold-soft:#F1E4C6;
-    --line: rgba(22,27,46,0.14);
+    --line:rgba(22,27,46,0.14);
     --wa:#25D366;
+    --err:#B4432F;
     --font-display:'Fraunces', Georgia, serif;
     --font-body:'Inter', -apple-system, "Segoe UI", sans-serif;
     --font-mono:'IBM Plex Mono', monospace;
@@ -56,20 +53,20 @@
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{ max-width:620px; margin:0 auto; padding:0 20px 72px; }
+  .wrap{ max-width:600px; margin:0 auto; padding:0 20px 72px; }
 
-  /* ---------- top ---------- */
   .topbar{
     background:var(--ink);
     color:var(--ivory);
     text-align:center;
-    padding:14px 20px;
-    font-size:.78rem;
-    letter-spacing:.14em;
-    text-transform:uppercase;
+    padding:13px 20px;
     font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.15em;
+    text-transform:uppercase;
   }
-  header{ padding:52px 0 8px; }
+
+  header{ padding:50px 0 6px; }
   .eyebrow{
     font-family:var(--font-mono);
     font-size:.72rem;
@@ -81,31 +78,29 @@
   h1{
     font-family:var(--font-display);
     font-weight:400;
-    font-size:2.1rem;
+    font-size:2.05rem;
     line-height:1.2;
     letter-spacing:-.01em;
     margin:0 0 20px;
   }
   h1 em{ font-style:italic; color:var(--teal); }
-  .lede{ font-size:1.06rem; color:var(--ink-2); margin:0 0 16px; }
-  .lede.last{ margin-bottom:0; }
+  .lede{ font-size:1.05rem; color:var(--ink-2); margin:0 0 15px; }
+  .lede:last-child{ margin-bottom:0; }
 
-  /* ---------- cards ---------- */
   .card{
     background:#fff;
     border:1px solid var(--line);
     border-radius:14px;
     padding:26px 24px;
-    margin:28px 0;
+    margin:26px 0;
   }
   .card.dark{ background:var(--ink); border-color:var(--ink); color:var(--ivory); }
   .card.dark h2{ color:var(--ivory); }
-
   h2{
     font-family:var(--font-display);
     font-weight:400;
-    font-size:1.32rem;
-    margin:0 0 18px;
+    font-size:1.3rem;
+    margin:0 0 16px;
     letter-spacing:-.01em;
   }
   h3{
@@ -118,366 +113,348 @@
     margin:0 0 10px;
   }
 
-  /* ---------- the deal ---------- */
-  .deal{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border-radius:12px; overflow:hidden; }
-  .deal > div{ background:#fff; padding:22px 18px; text-align:center; }
-  .deal .num{
-    font-family:var(--font-display);
-    font-size:2.1rem;
-    line-height:1.1;
-    display:block;
-    margin-bottom:6px;
-  }
-  .deal .give .num{ color:var(--teal); }
-  .deal .get .num{ color:var(--gold); }
-  .deal .lbl{ font-size:.86rem; color:var(--ink-2); }
-
-  /* ---------- link box ---------- */
-  .linkbox{
-    font-family:var(--font-mono);
-    font-size:.92rem;
-    background:var(--paper);
-    border:1px dashed var(--line);
-    border-radius:10px;
-    padding:16px;
-    word-break:break-all;
-    margin:0 0 14px;
-    color:var(--ink);
-  }
-  .code-chip{
-    display:inline-block;
-    font-family:var(--font-mono);
-    font-weight:500;
-    background:var(--gold-soft);
-    color:var(--ink);
-    border-radius:6px;
-    padding:3px 10px;
-    letter-spacing:.06em;
-  }
-
-  /* ---------- buttons ---------- */
-  .btn{
-    display:block;
-    width:100%;
+  /* the 20% headline */
+  .pct{
     text-align:center;
-    border:0;
-    border-radius:10px;
-    padding:17px 20px;
-    font-family:var(--font-body);
-    font-size:1rem;
-    font-weight:600;
-    cursor:pointer;
-    text-decoration:none;
-    margin-bottom:10px;
-    transition:opacity .15s ease, transform .08s ease;
+    padding:8px 0 4px;
   }
-  .btn:active{ transform:scale(.99); }
-  .btn:hover{ opacity:.9; }
-  .btn-wa{ background:var(--wa); color:#06301a; }
-  .btn-copy{ background:var(--teal); color:#fff; }
-  .btn-ghost{
-    background:transparent;
+  .pct .big{
+    font-family:var(--font-display);
+    font-size:4rem;
+    line-height:1;
+    color:var(--teal);
+    display:block;
+  }
+  .pct .cap{
+    display:block;
+    margin-top:10px;
     color:var(--ink-2);
-    border:1px solid var(--line);
-    font-weight:500;
+    font-size:1rem;
+  }
+  .deadline{
+    display:inline-block;
+    margin-top:16px;
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    background:var(--gold-soft);
+    color:#6b5119;
+    border-radius:5px;
+    padding:5px 11px;
   }
 
-  /* ---------- steps ---------- */
   ol.steps{ list-style:none; counter-reset:s; margin:0; padding:0; }
-  ol.steps li{
-    counter-increment:s;
-    position:relative;
-    padding-left:44px;
-    margin-bottom:18px;
-  }
+  ol.steps li{ counter-increment:s; position:relative; padding-left:44px; margin-bottom:17px; }
   ol.steps li:last-child{ margin-bottom:0; }
   ol.steps li::before{
     content:counter(s);
-    position:absolute;
-    left:0; top:1px;
-    width:28px; height:28px;
-    border-radius:50%;
-    background:var(--teal-soft);
-    color:var(--teal);
-    font-family:var(--font-mono);
-    font-size:.82rem;
+    position:absolute; left:0; top:1px;
+    width:28px; height:28px; border-radius:50%;
+    background:var(--teal-soft); color:var(--teal);
+    font-family:var(--font-mono); font-size:.82rem;
     display:flex; align-items:center; justify-content:center;
   }
   ol.steps strong{ display:block; }
   ol.steps span{ color:var(--ink-2); font-size:.94rem; }
 
-  /* ---------- preview of the message ---------- */
-  .msg-preview{
-    background:#E7FFDB;
-    border-radius:12px 12px 12px 4px;
-    padding:16px 18px;
-    font-size:.94rem;
-    color:#0b2b16;
-    white-space:pre-wrap;
-    line-height:1.55;
+  /* form */
+  .fieldset{ border:0; margin:0 0 22px; padding:0; }
+  .fieldset:last-of-type{ margin-bottom:0; }
+  .fieldset legend{
+    font-family:var(--font-mono);
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--teal);
+    padding:0;
     margin-bottom:14px;
   }
+  label{ display:block; font-size:.9rem; font-weight:500; margin-bottom:6px; }
+  label .opt{ font-weight:400; color:var(--ink-2); }
+  input{
+    width:100%;
+    font-family:var(--font-body);
+    font-size:1rem;
+    padding:13px 14px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:var(--paper);
+    color:var(--ink);
+    margin-bottom:15px;
+    -webkit-appearance:none;
+  }
+  input:focus{ outline:2px solid var(--teal); outline-offset:-1px; background:#fff; }
+  input.bad{ border-color:var(--err); background:#fdf4f2; }
+  .err{
+    display:none;
+    color:var(--err);
+    font-size:.84rem;
+    margin:-10px 0 14px;
+  }
+  .err.show{ display:block; }
+
+  .btn{
+    display:block; width:100%;
+    text-align:center; border:0; border-radius:10px;
+    padding:17px 20px;
+    font-family:var(--font-body); font-size:1rem; font-weight:600;
+    cursor:pointer; text-decoration:none; margin-bottom:10px;
+    transition:opacity .15s ease, transform .08s ease;
+  }
+  .btn:active{ transform:scale(.99); }
+  .btn:hover{ opacity:.9; }
+  .btn-wa{ background:var(--wa); color:#06301a; }
+  .btn-ghost{ background:transparent; color:var(--ink-2); border:1px solid var(--line); font-weight:500; }
 
   .fine{ font-size:.88rem; color:var(--ink-2); }
-  .fine li{ margin-bottom:7px; }
   .fine ul{ padding-left:20px; margin:0; }
+  .fine li{ margin-bottom:7px; }
 
-  footer{
-    text-align:center;
-    color:var(--ink-2);
-    font-size:.86rem;
-    padding-top:12px;
+  /* sent state */
+  #sent{ display:none; text-align:center; }
+  #sent .tick{
+    width:52px; height:52px; border-radius:50%;
+    background:var(--teal-soft); color:var(--teal);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.6rem; margin:0 auto 16px;
   }
+
+  /* closed state */
+  #closed{ display:none; }
+
+  footer{ text-align:center; color:var(--ink-2); font-size:.86rem; padding-top:10px; }
   footer a{ color:var(--teal); }
 
-  .toast{
-    position:fixed;
-    left:50%; bottom:26px;
-    transform:translateX(-50%) translateY(120%);
-    background:var(--ink);
-    color:var(--ivory);
-    padding:13px 22px;
-    border-radius:999px;
-    font-size:.9rem;
-    transition:transform .25s ease;
-    z-index:50;
-  }
-  .toast.show{ transform:translateX(-50%) translateY(0); }
-
   @media (max-width:420px){
-    h1{ font-size:1.8rem; }
-    .deal{ grid-template-columns:1fr; }
+    h1{ font-size:1.75rem; }
+    .pct .big{ font-size:3.2rem; }
   }
 </style>
 </head>
 <body>
 
-<div class="topbar" id="topbar">A thank-you, and a small ask</div>
+<div class="topbar" id="topbar">For parents who've done DMIT with me</div>
 
 <div class="wrap">
 
   <header>
-    <p class="eyebrow">For parents who've already done DMIT</p>
-    <h1 id="headline">Someone you know is <em>where you were.</em></h1>
-    <p class="lede" id="intro">
-      You already know what the DMIT report did — it stopped the guessing. You stopped
-      wondering what was wrong with your child and started seeing how they're actually wired.
+    <p class="eyebrow">A thank-you, and a small ask</p>
+    <h1>Someone you know is <em>where you were.</em></h1>
+    <p class="lede">
+      You've already sat with your child's DMIT report. You know what it did — it stopped the
+      guessing. You stopped wondering what was wrong with your child and started understanding
+      how they're actually built.
     </p>
-    <p class="lede last">
-      There's a parent in your circle still in that earlier stage. Still calling it lazy.
-      Still adding tuitions. If you'd like to hand them what you found, here's a way to do it —
-      and I'd like to say thank you properly when you do.
+    <p class="lede">
+      There's a parent in your circle still in that earlier stage. Still calling it laziness.
+      Still adding another tuition. If you'd like to hand them what you found, this is how —
+      and I'd like to thank you properly for it.
     </p>
   </header>
 
-  <!-- THE DEAL -->
+  <!-- ================= OFFER ================= -->
+  <div class="card" id="offer-card">
+    <h3>This Independence Day</h3>
+    <div class="pct">
+      <span class="big" id="pct-big">20%</span>
+      <span class="cap" id="pct-cap">back to you, for every parent who enrols for DMIT through you</span>
+      <span class="deadline" id="deadline">—</span>
+    </div>
+  </div>
+
+  <!-- ================= STEPS ================= -->
   <div class="card">
     <h3>How it works</h3>
-    <h2>You give something. You get something.</h2>
-    <div class="deal">
-      <div class="give">
-        <span class="num" id="give-amt">₹1,947</span>
-        <span class="lbl">off for the parent you send</span>
-      </div>
-      <div class="get">
-        <span class="num" id="get-amt">20%</span>
-        <span class="lbl" id="get-lbl">to you, for every parent who books</span>
-      </div>
-    </div>
-    <p class="fine" style="margin:16px 0 0;" id="deal-note"></p>
-  </div>
-
-  <!-- THEIR LINK -->
-  <div class="card">
-    <h3>Your personal link</h3>
-    <h2 id="link-title">This link is yours.</h2>
-    <p class="fine" style="margin:-8px 0 16px;">
-      Anyone who books through it is counted as yours — automatically. Your code is
-      <span class="code-chip" id="code-chip">—</span>
-    </p>
-
-    <div class="linkbox" id="link-text">—</div>
-
-    <button class="btn btn-copy" id="btn-copy">Copy my link</button>
-  </div>
-
-  <!-- THE MESSAGE -->
-  <div class="card">
-    <h3>The easy way</h3>
-    <h2>Don't write anything. Just send this.</h2>
-    <p class="fine" style="margin:-8px 0 16px;">
-      Tap the button, pick a parent, hit send. You can edit it first if you'd rather say it your way.
-    </p>
-
-    <div class="msg-preview" id="msg-preview">—</div>
-
-    <a class="btn btn-wa" id="btn-wa" href="#">Send on WhatsApp</a>
-    <button class="btn btn-ghost" id="btn-copy-msg">Copy the message instead</button>
-  </div>
-
-  <!-- STEPS -->
-  <div class="card">
-    <h3>What happens next</h3>
-    <h2>Three steps, and you're done.</h2>
+    <h2>Nothing for you to manage.</h2>
     <ol class="steps">
       <li>
-        <strong>You send your link.</strong>
-        <span>They land on the DMIT page with your code already applied. Their discount shows up on its own.</span>
+        <strong>Fill in their details below.</strong>
+        <span>Their name and number is all I really need. Takes about thirty seconds.</span>
       </li>
       <li>
-        <strong>They book their session.</strong>
-        <span>I take it from there — the call, the scan, the report, the sit-down where it all gets explained. You're not involved in any of it.</span>
+        <strong>I reach out to them myself.</strong>
+        <span>Warmly, and mentioning you sent me. You don't have to explain DMIT or convince anyone of anything.</span>
       </li>
       <li>
-        <strong id="step3-title">You get your 20% on UPI.</strong>
-        <span>Within 48 hours of their payment clearing. No forms, no chasing, no minimum.</span>
+        <strong>They enrol, and your 20% comes to you.</strong>
+        <span>Straight to your UPI, within 48 hours of their payment clearing.</span>
       </li>
     </ol>
   </div>
 
-  <!-- FINE PRINT -->
-  <div class="card dark">
-    <h2 style="font-size:1.15rem;">The honest fine print</h2>
-    <ul class="fine" style="color:var(--ivory); opacity:.85; padding-left:20px;">
-      <li>There's no limit. Send it to one parent or ten.</li>
-      <li id="fine-rate">Paid per parent who actually books and pays. Not per click, not per enquiry.</li>
-      <li>Your link doesn't expire. The Independence Day pricing does — after that your parent still gets ₹1,000 off.</li>
-      <li>Your rate is worked out from your own DMIT, so it stays the same no matter who you send.</li>
-      <li>I'd rather you sent this to two parents who genuinely need it than twenty who don't. This only works if it stays a real recommendation.</li>
-      <li>Anything unclear — message me. I'll answer it myself.</li>
+  <!-- ================= FORM ================= -->
+  <div class="card" id="form-card">
+    <h3>The form</h3>
+    <h2>Who should I speak to?</h2>
+
+    <form id="ref-form" novalidate>
+      <fieldset class="fieldset">
+        <legend>About you</legend>
+        <label for="rname">Your name</label>
+        <input type="text" id="rname" autocomplete="name" placeholder="So I know who to thank">
+        <p class="err" id="e-rname">Please add your name.</p>
+
+        <label for="rphone">Your phone number</label>
+        <input type="tel" id="rphone" inputmode="numeric" autocomplete="tel" placeholder="This is where your 20% goes">
+        <p class="err" id="e-rphone">Please add a valid phone number.</p>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend>The parent you're referring</legend>
+        <label for="fname">Their name</label>
+        <input type="text" id="fname" placeholder="Parent's name">
+        <p class="err" id="e-fname">Please add their name.</p>
+
+        <label for="fphone">Their phone number</label>
+        <input type="tel" id="fphone" inputmode="numeric" placeholder="So I can reach them">
+        <p class="err" id="e-fphone">Please add a valid phone number.</p>
+
+        <label for="femail">Their email <span class="opt">— optional</span></label>
+        <input type="email" id="femail" placeholder="If you have it">
+        <p class="err" id="e-femail">That email doesn't look right.</p>
+
+        <label for="fage">Their child's age <span class="opt">— optional</span></label>
+        <input type="text" id="fage" inputmode="numeric" placeholder="Helps me prepare">
+
+        <label for="fnote">Anything I should know <span class="opt">— optional</span></label>
+        <input type="text" id="fnote" placeholder="What they're struggling with">
+      </fieldset>
+
+      <button type="submit" class="btn btn-wa" id="btn-send">Send this to Manika on WhatsApp</button>
+      <p class="fine" style="text-align:center; margin:6px 0 0;">
+        Opens WhatsApp with everything filled in. Nothing is stored on this page.
+      </p>
+    </form>
+
+    <div id="sent">
+      <div class="tick">✓</div>
+      <h2 style="margin-bottom:10px;">Sent. Thank you.</h2>
+      <p class="fine" style="margin-bottom:20px;">
+        I'll reach out to them personally, and I'll let you know once they've enrolled.
+      </p>
+      <button class="btn btn-ghost" id="btn-again">Refer someone else</button>
+    </div>
+  </div>
+
+  <!-- ================= CLOSED ================= -->
+  <div class="card" id="closed">
+    <h2>This one's closed for now.</h2>
+    <p class="fine">
+      The Independence Day referral offer has ended. If there's still a parent you'd like me to
+      speak to, message me directly — I'd genuinely like to help them, offer or no offer.
+    </p>
+    <a class="btn btn-wa" id="btn-closed-wa" href="#" style="margin-top:18px;">Message me</a>
+  </div>
+
+  <!-- ================= FINE PRINT ================= -->
+  <div class="card dark" id="fine-card">
+    <h2 style="font-size:1.12rem;">The honest fine print</h2>
+    <ul class="fine" style="color:var(--ivory); opacity:.85;">
+      <li>There's no limit. Refer one parent or ten.</li>
+      <li>The 20% is paid on parents who actually enrol — not on enquiries.</li>
+      <li>I'll always tell you when someone you sent has enrolled. You won't have to ask.</li>
+      <li>I'd rather you sent this to two parents who genuinely need it than twenty who don't. This only works while it stays a real recommendation.</li>
+      <li>Anything unclear — message me. I'll answer myself.</li>
     </ul>
-    <a class="btn btn-ghost" id="btn-ask" href="#" style="color:var(--ivory); border-color:var(--line-on-dark, rgba(244,239,226,0.3)); margin-top:18px;">Ask me a question</a>
+    <a class="btn btn-ghost" id="btn-ask" href="#" style="color:var(--ivory); border-color:rgba(244,239,226,0.3); margin-top:18px;">Ask me a question</a>
   </div>
 
   <footer>
-    Manika Goel — Mind Performance Coach &amp; Counselling Psychologist<br>
-    <a href="https://dmit.manikagoel.com/" id="foot-link">See the DMIT page your parent will land on →</a>
+    Manika Goel — Mind Performance Coach &amp; Counselling Psychologist
   </footer>
 
 </div>
 
-<div class="toast" id="toast">Copied</div>
-
 <script>
 (function(){
-  const qs = new URLSearchParams(location.search);
+  const $ = id => document.getElementById(id);
 
-  // ---- who is this page for ----
-  const rawName = (qs.get('n') || '').trim();
-  const name = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : '';
-
-  // Code: explicit ?c=, else derived from the name, else a generic one.
-  let code = (qs.get('c') || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if(!code && name) code = name.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
-  if(!code) code = 'FRIEND';
-
-  const link = CONFIG.dmitUrl + '?ref=' + encodeURIComponent(code);
-
-  // ---- what this parent earns ----
-  // ?p= what they paid for their own DMIT  → payout is CONFIG.commissionPct% of it
-  // ?r= an explicit payout, if you'd rather not put their price in the URL
-  const paid   = parseInt((qs.get('p') || '').replace(/[^0-9]/g, ''), 10);
-  const explicit = parseInt((qs.get('r') || '').replace(/[^0-9]/g, ''), 10);
-
-  let payout = null;
-  if(explicit > 0) payout = explicit;
-  else if(paid > 0) payout = Math.round(paid * CONFIG.commissionPct / 100);
-
-  const inr = n => '₹' + n.toLocaleString('en-IN');
-
-  // ---- is the Independence offer still live? ----
-  // Ends at 23:59:59 IST on CONFIG.offerEnds.
+  // ---- offer window ----
   const endIST = new Date(CONFIG.offerEnds + 'T23:59:59+05:30');
-  const offerLive = new Date() <= endIST;
+  const live   = new Date() <= endIST;
+  const endLabel = endIST.toLocaleDateString('en-IN', {day:'numeric', month:'long', timeZone:'Asia/Kolkata'});
 
-  const endLabel = endIST.toLocaleDateString('en-IN', {
-    day:'numeric', month:'long', timeZone:'Asia/Kolkata'
+  $('pct-big').textContent = CONFIG.percent + '%';
+  $('deadline').textContent = 'Only till ' + endLabel;
+
+  const waBase = 'https://wa.me/' + CONFIG.whatsapp + '?text=';
+  $('btn-ask').href = waBase + encodeURIComponent('Hi Manika, I have a question about the DMIT referral.');
+  $('btn-closed-wa').href = waBase + encodeURIComponent('Hi Manika, there\'s a parent I\'d like you to speak to.');
+
+  if(!live){
+    $('offer-card').style.display = 'none';
+    $('form-card').style.display  = 'none';
+    $('fine-card').style.display  = 'none';
+    $('closed').style.display     = 'block';
+    return;
+  }
+
+  // ---- validation ----
+  const digits = s => (s || '').replace(/[^0-9]/g, '');
+
+  function setErr(id, on){
+    const input = $(id), err = $('e-' + id);
+    if(input) input.classList.toggle('bad', on);
+    if(err) err.classList.toggle('show', on);
+    return !on;
+  }
+
+  function validate(){
+    let ok = true;
+    ok = setErr('rname',  $('rname').value.trim().length < 2) && ok;
+    ok = setErr('rphone', digits($('rphone').value).length < 10) && ok;
+    ok = setErr('fname',  $('fname').value.trim().length < 2) && ok;
+    ok = setErr('fphone', digits($('fphone').value).length < 10) && ok;
+
+    const em = $('femail').value.trim();
+    ok = setErr('femail', em.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) && ok;
+
+    return ok;
+  }
+
+  // clear an error as soon as they start fixing it
+  ['rname','rphone','fname','fphone','femail'].forEach(id => {
+    $(id).addEventListener('input', () => setErr(id, false));
   });
 
-  // ---- personalise ----
-  if(name){
-    document.getElementById('topbar').textContent = name + ' — a thank-you, and a small ask';
-    document.getElementById('headline').innerHTML =
-      name + ', someone you know is <em>where you were.</em>';
-    document.getElementById('link-title').textContent = 'This link is yours, ' + name + '.';
-  }
-
-  document.getElementById('code-chip').textContent = code;
-  document.getElementById('link-text').textContent = link;
-  document.getElementById('give-amt').textContent = offerLive ? '₹1,947' : '₹1,000';
-
-  // ---- the earning side ----
-  const pct = CONFIG.commissionPct + '%';
-  if(payout){
-    document.getElementById('get-amt').textContent = inr(payout);
-    document.getElementById('get-lbl').textContent = 'to you, for every parent who books';
-    document.getElementById('step3-title').textContent = 'You get ' + inr(payout) + ' on UPI.';
-    document.getElementById('fine-rate').textContent =
-      inr(payout) + ' per parent who actually books and pays — that\'s ' + pct +
-      ' of your own DMIT. Not per click, not per enquiry.';
-  } else {
-    document.getElementById('get-amt').textContent = pct;
-    document.getElementById('get-lbl').textContent = 'of what you paid for your DMIT, every time a parent books';
-    document.getElementById('step3-title').textContent = 'You get your ' + pct + ' on UPI.';
-    document.getElementById('fine-rate').textContent =
-      pct + ' of what you paid for your own DMIT, per parent who actually books and pays. Not per click, not per enquiry.';
-  }
-
-  document.getElementById('deal-note').innerHTML = offerLive
-    ? 'Till <strong>' + endLabel + '</strong> the parent you send gets the full Independence Day price — ₹1,947 off, only 5 seats. After that your link still gives them ₹1,000 off. Your ₹800 doesn\'t change either way.'
-    : 'The Independence Day pricing has closed, but your link is still live — the parent you send gets ₹1,000 off, and your ₹800 stays the same.';
-
-  // ---- the forward-able message ----
-  const msg =
-'Hi! Remember I got that DMIT assessment done for my child?\n\n' +
-'I\'m telling you because I think you\'d find it useful. It showed us how my child\'s brain actually works — the way they learn, why they were struggling with certain things. A lot of what I\'d been treating as "not trying hard enough" turned out to be something else entirely. It changed how I speak to them.\n\n' +
-'Manika Goel does it — she\'s a mind performance coach and counselling psychologist. ' +
-(offerLive
-  ? 'She\'s running an Independence Day offer till ' + endLabel + ' — ₹1,947 off, and it\'s only for 5 families.\n\n'
-  : 'She\'s giving ₹1,000 off through this link.\n\n') +
-'Here\'s the link, it already has my code on it:\n' + link + '\n\n' +
-'No pressure at all. Just thought of you.';
-
-  document.getElementById('msg-preview').textContent = msg;
-  document.getElementById('btn-wa').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
-
-  // ---- ask-me button ----
-  const askMsg = 'Hi Manika, I have a question about the DMIT referral' + (name ? ' (this is ' + name + ')' : '') + '.';
-  document.getElementById('btn-ask').href =
-    'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(askMsg);
-
-  document.getElementById('foot-link').href = link;
-
-  // ---- copy helpers ----
-  const toast = document.getElementById('toast');
-  let toastTimer;
-  function showToast(text){
-    toast.textContent = text;
-    toast.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toast.classList.remove('show'), 1900);
-  }
-  function copy(text, label){
-    if(navigator.clipboard && window.isSecureContext){
-      navigator.clipboard.writeText(text).then(() => showToast(label)).catch(() => fallback(text, label));
-    } else {
-      fallback(text, label);
+  // ---- submit ----
+  $('ref-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!validate()){
+      const firstBad = document.querySelector('input.bad');
+      if(firstBad){ firstBad.focus(); firstBad.scrollIntoView({block:'center', behavior:'smooth'}); }
+      return;
     }
-  }
-  function fallback(text, label){
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); showToast(label); }
-    catch(e){ showToast('Press and hold to copy'); }
-    document.body.removeChild(ta);
-  }
 
-  document.getElementById('btn-copy').addEventListener('click', () => copy(link, 'Link copied'));
-  document.getElementById('btn-copy-msg').addEventListener('click', () => copy(msg, 'Message copied'));
+    const line = (label, val) => val ? '\n' + label + ': ' + val : '';
+
+    const msg =
+      'DMIT REFERRAL' +
+      '\n\nFrom: ' + $('rname').value.trim() +
+      '\nMy number: ' + $('rphone').value.trim() +
+      '\n\nI\'m referring:' +
+      '\nName: ' + $('fname').value.trim() +
+      '\nPhone: ' + $('fphone').value.trim() +
+      line('Email', $('femail').value.trim()) +
+      line('Child\'s age', $('fage').value.trim()) +
+      line('About them', $('fnote').value.trim());
+
+    window.open(waBase + encodeURIComponent(msg), '_blank');
+
+    $('ref-form').style.display = 'none';
+    $('sent').style.display = 'block';
+    $('sent').scrollIntoView({block:'center', behavior:'smooth'});
+  });
+
+  // ---- refer another: keep their details, clear the friend's ----
+  $('btn-again').addEventListener('click', function(){
+    ['fname','fphone','femail','fage','fnote'].forEach(id => { $(id).value = ''; });
+    $('sent').style.display = 'none';
+    $('ref-form').style.display = 'block';
+    $('fname').focus();
+    $('fname').scrollIntoView({block:'center', behavior:'smooth'});
+  });
 })();
 </script>
 
