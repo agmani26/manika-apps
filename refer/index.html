@@ -22,7 +22,11 @@
     offerEnds: "2026-08-20",
 
     // Your commission to the referrer.
-    percent: 20
+    percent: 20,
+
+    // Your Topmate 1:1 booking link — this is what referrers send their friend.
+    // Taken from the CTA on dmit.manikagoel.com. Change it if it should be a different one.
+    bookingUrl: "https://topmate.io/manika3110/1756234"
   };
 </script>
 
@@ -207,15 +211,16 @@
   .btn-wa{ background:var(--wa); color:#06301a; }
   .btn-ghost{ background:transparent; color:var(--ink-2); border:1px solid var(--line); font-weight:500; }
 
-  .msg-preview{
-    background:#E7FFDB;
-    border-radius:12px 12px 12px 4px;
-    padding:16px 18px;
-    font-size:.94rem;
-    color:#0b2b16;
-    white-space:pre-wrap;
-    line-height:1.55;
-    margin-bottom:14px;
+  .linkbox{
+    font-family:var(--font-mono);
+    font-size:.9rem;
+    background:var(--paper);
+    border:1px dashed var(--line);
+    border-radius:10px;
+    padding:15px 16px;
+    word-break:break-all;
+    margin:24px 0 14px;
+    color:var(--ink);
   }
 
   label.check{
@@ -301,71 +306,33 @@
   <!-- ================= STEPS ================= -->
   <div class="card">
     <h3>How it works</h3>
-    <h2>Three steps, and they're in your hands.</h2>
     <ol class="steps">
       <li>
         <strong>Tell them about it yourself.</strong>
-        <span>Your experience is the part that lands — what the report showed you about your child, and what changed after. Coming from you, it means something no advertisement of mine ever could.</span>
+        <span>Your own experience — what the challenges were, what the report showed you, and how you felt about it.</span>
       </li>
       <li>
-        <strong>If they're interested, send them my details.</strong>
-        <span>Only once they've said yes. They reach out to me in their own time — I won't call anyone who hasn't asked me to.</span>
+        <strong>If they're interested, send them the link below.</strong>
+        <span>They book their call with me directly.</span>
       </li>
       <li>
-        <strong>They enrol, and your 20% comes to you.</strong>
-        <span>20% of what you paid for your own DMIT — straight to your UPI, within 48 hours of their payment clearing. Same amount every time, however many you send.</span>
+        <strong>Once they enrol, your 20% comes to you.</strong>
+        <span>20% of what you paid for your own DMIT, straight to your UPI.</span>
       </li>
     </ol>
-  </div>
 
-  <!-- ================= WHAT TO SAY ================= -->
-  <div class="card">
-    <h3>Step one</h3>
-    <h2>What to tell them.</h2>
-    <p class="fine" style="margin:-6px 0 16px;">
-      Don't explain the science — you don't have to, and it isn't what convinces anyone.
-      Just tell them your own story. Three things are usually enough:
-    </p>
-    <ol class="steps">
-      <li>
-        <strong>What it was like before.</strong>
-        <span>The word you'd started using for your child. What you'd already tried that didn't work.</span>
-      </li>
-      <li>
-        <strong>What the report actually showed you.</strong>
-        <span>The one thing that surprised you most about how your child is wired.</span>
-      </li>
-      <li>
-        <strong>What's different now.</strong>
-        <span>Even something small — how you speak to them, how they study, what you stopped expecting.</span>
-      </li>
-    </ol>
-    <p class="fine" style="margin:18px 0 0;">
-      Then ask them straight: <em>"Would you like me to send you her details?"</em> If they say yes, use the button below.
-    </p>
-  </div>
-
-  <!-- ================= SEND MY DETAILS ================= -->
-  <div class="card">
-    <h3>Step two</h3>
-    <h2>Send them my details.</h2>
-    <p class="fine" style="margin:-6px 0 16px;">
-      This opens WhatsApp so you can forward it to them. Add a line of your own at the top —
-      it always reads better coming from you.
-    </p>
-    <div class="msg-preview" id="intro-preview">—</div>
-    <a class="btn btn-wa" id="btn-intro" href="#">Forward this to them</a>
-    <button class="btn btn-ghost" id="btn-copy-intro">Copy it instead</button>
+    <div class="linkbox" id="book-link">—</div>
+    <a class="btn btn-wa" id="btn-share">Send this link on WhatsApp</a>
+    <button class="btn btn-ghost" id="btn-copy-link">Copy the link</button>
   </div>
 
   <!-- ================= FORM ================= -->
   <div class="card" id="form-card">
-    <h3>Step three</h3>
-    <h2>Tell me who to expect.</h2>
+    <h3>And then</h3>
+    <h2>Fill in their details here.</h2>
     <p class="fine" style="margin:-6px 0 20px;">
-      Fill this in <strong>after</strong> you've spoken to them, so that when they reach out I already
-      know they came from you — and your 20% is recorded against your name. I won't contact them;
-      I'll simply be ready when they contact me.
+      So I know they've come from you and your 20% is recorded against your name —
+      and if it's needed, I can get in touch with them myself.
     </p>
 
     <form id="ref-form" novalidate>
@@ -403,9 +370,9 @@
 
       <label class="check" for="consent">
         <input type="checkbox" id="consent">
-        <span>I've spoken to them, and they're happy for me to pass their details on.</span>
+        <span>They're happy for me to share their details with you.</span>
       </label>
-      <p class="err" id="e-consent">Please confirm you've spoken to them first.</p>
+      <p class="err" id="e-consent">Please tick this before sending.</p>
 
       <button type="submit" class="btn btn-wa" id="btn-send">Send this to Manika on WhatsApp</button>
       <p class="fine" style="text-align:center; margin:6px 0 0;">
@@ -417,7 +384,7 @@
       <div class="tick">✓</div>
       <h2 style="margin-bottom:10px;">Noted. Thank you.</h2>
       <p class="fine" style="margin-bottom:20px;">
-        I'll be ready when they message me, and I'll let you know the moment they enrol.
+        I'll watch out for them, and I'll let you know the moment they enrol.
       </p>
       <button class="btn btn-ghost" id="btn-again">Refer someone else</button>
     </div>
@@ -440,7 +407,6 @@
       <li>There's no limit. Refer one parent or ten.</li>
       <li>Your 20% is worked out from your own DMIT, so it's the same whoever you send.</li>
       <li>It's paid on parents who actually enrol — not on enquiries.</li>
-      <li>I will never cold-call anyone you name here. They come to me when they're ready, or not at all.</li>
       <li>I'll always tell you when someone you sent has enrolled. You won't have to ask.</li>
       <li>I'd rather you sent this to two parents who genuinely need it than twenty who don't. This only works while it stays a real recommendation.</li>
       <li>Anything unclear — message me. I'll answer myself.</li>
@@ -470,16 +436,13 @@
   $('btn-ask').href = waBase + encodeURIComponent('Hi Manika, I have a question about the DMIT referral.');
   $('btn-closed-wa').href = waBase + encodeURIComponent('Hi Manika, there\'s a parent I\'d like to tell about DMIT.');
 
-  // ---- the message the referrer forwards to their friend ----
-  const introMsg =
+  // ---- the booking link the referrer passes on ----
+  const shareMsg =
 "This is Manika Goel — she's the one who did my child's DMIT.\n\n" +
-"She's a mind performance coach and counselling psychologist. The assessment showed us how my child's brain actually works — how they learn, and why certain things were so hard for them. It changed how I speak to them.\n\n" +
-"Message her directly, she'll explain it properly:\n" +
-"https://wa.me/" + CONFIG.whatsapp + "\n\n" +
-"Do mention my name when you write to her.";
+"You can book a call with her here:\n" + CONFIG.bookingUrl;
 
-  $('intro-preview').textContent = introMsg;
-  $('btn-intro').href = 'https://wa.me/?text=' + encodeURIComponent(introMsg);
+  $('book-link').textContent = CONFIG.bookingUrl;
+  $('btn-share').href = 'https://wa.me/?text=' + encodeURIComponent(shareMsg);
 
   if(!live){
     $('offer-card').style.display = 'none';
@@ -559,12 +522,12 @@
   });
 
   // ---- refer another: keep their details, clear the friend's ----
-  $('btn-copy-intro').addEventListener('click', function(){
-    const done = () => { this.textContent = 'Copied ✓'; setTimeout(() => { this.textContent = 'Copy it instead'; }, 1900); };
+  $('btn-copy-link').addEventListener('click', function(){
+    const done = () => { this.textContent = 'Copied ✓'; setTimeout(() => { this.textContent = 'Copy the link'; }, 1900); };
     if(navigator.clipboard && window.isSecureContext){
-      navigator.clipboard.writeText(introMsg).then(done).catch(() => fallbackCopy(introMsg, done));
+      navigator.clipboard.writeText(CONFIG.bookingUrl).then(done).catch(() => fallbackCopy(CONFIG.bookingUrl, done));
     } else {
-      fallbackCopy(introMsg, done);
+      fallbackCopy(CONFIG.bookingUrl, done);
     }
   });
 
