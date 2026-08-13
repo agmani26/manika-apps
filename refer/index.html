@@ -207,6 +207,41 @@
   .btn-wa{ background:var(--wa); color:#06301a; }
   .btn-ghost{ background:transparent; color:var(--ink-2); border:1px solid var(--line); font-weight:500; }
 
+  .msg-preview{
+    background:#E7FFDB;
+    border-radius:12px 12px 12px 4px;
+    padding:16px 18px;
+    font-size:.94rem;
+    color:#0b2b16;
+    white-space:pre-wrap;
+    line-height:1.55;
+    margin-bottom:14px;
+  }
+
+  label.check{
+    display:flex;
+    align-items:flex-start;
+    gap:11px;
+    font-weight:400;
+    font-size:.92rem;
+    line-height:1.5;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:14px 15px;
+    margin-bottom:16px;
+    cursor:pointer;
+  }
+  label.check input{
+    width:19px;
+    height:19px;
+    min-width:19px;
+    margin:2px 0 0;
+    accent-color:var(--teal);
+    cursor:pointer;
+  }
+  label.check.bad{ border-color:var(--err); background:#fdf4f2; }
+
   .fine{ font-size:.88rem; color:var(--ink-2); }
   .fine ul{ padding-left:20px; margin:0; }
   .fine li{ margin-bottom:7px; }
@@ -266,15 +301,15 @@
   <!-- ================= STEPS ================= -->
   <div class="card">
     <h3>How it works</h3>
-    <h2>Nothing for you to manage.</h2>
+    <h2>Three steps, and they're in your hands.</h2>
     <ol class="steps">
       <li>
-        <strong>Fill in their details below.</strong>
-        <span>Their name and number is all I really need. Takes about thirty seconds.</span>
+        <strong>Tell them about it yourself.</strong>
+        <span>Your experience is the part that lands — what the report showed you about your child, and what changed after. Coming from you, it means something no advertisement of mine ever could.</span>
       </li>
       <li>
-        <strong>I reach out to them myself.</strong>
-        <span>Warmly, and mentioning you sent me. You don't have to explain DMIT or convince anyone of anything.</span>
+        <strong>If they're interested, send them my details.</strong>
+        <span>Only once they've said yes. They reach out to me in their own time — I won't call anyone who hasn't asked me to.</span>
       </li>
       <li>
         <strong>They enrol, and your 20% comes to you.</strong>
@@ -283,10 +318,55 @@
     </ol>
   </div>
 
+  <!-- ================= WHAT TO SAY ================= -->
+  <div class="card">
+    <h3>Step one</h3>
+    <h2>What to tell them.</h2>
+    <p class="fine" style="margin:-6px 0 16px;">
+      Don't explain the science — you don't have to, and it isn't what convinces anyone.
+      Just tell them your own story. Three things are usually enough:
+    </p>
+    <ol class="steps">
+      <li>
+        <strong>What it was like before.</strong>
+        <span>The word you'd started using for your child. What you'd already tried that didn't work.</span>
+      </li>
+      <li>
+        <strong>What the report actually showed you.</strong>
+        <span>The one thing that surprised you most about how your child is wired.</span>
+      </li>
+      <li>
+        <strong>What's different now.</strong>
+        <span>Even something small — how you speak to them, how they study, what you stopped expecting.</span>
+      </li>
+    </ol>
+    <p class="fine" style="margin:18px 0 0;">
+      Then ask them straight: <em>"Would you like me to send you her details?"</em> If they say yes, use the button below.
+    </p>
+  </div>
+
+  <!-- ================= SEND MY DETAILS ================= -->
+  <div class="card">
+    <h3>Step two</h3>
+    <h2>Send them my details.</h2>
+    <p class="fine" style="margin:-6px 0 16px;">
+      This opens WhatsApp so you can forward it to them. Add a line of your own at the top —
+      it always reads better coming from you.
+    </p>
+    <div class="msg-preview" id="intro-preview">—</div>
+    <a class="btn btn-wa" id="btn-intro" href="#">Forward this to them</a>
+    <button class="btn btn-ghost" id="btn-copy-intro">Copy it instead</button>
+  </div>
+
   <!-- ================= FORM ================= -->
   <div class="card" id="form-card">
-    <h3>The form</h3>
-    <h2>Who should I speak to?</h2>
+    <h3>Step three</h3>
+    <h2>Tell me who to expect.</h2>
+    <p class="fine" style="margin:-6px 0 20px;">
+      Fill this in <strong>after</strong> you've spoken to them, so that when they reach out I already
+      know they came from you — and your 20% is recorded against your name. I won't contact them;
+      I'll simply be ready when they contact me.
+    </p>
 
     <form id="ref-form" novalidate>
       <fieldset class="fieldset">
@@ -301,13 +381,13 @@
       </fieldset>
 
       <fieldset class="fieldset">
-        <legend>The parent you're referring</legend>
+        <legend>The parent you've spoken to</legend>
         <label for="fname">Their name</label>
         <input type="text" id="fname" placeholder="Parent's name">
         <p class="err" id="e-fname">Please add their name.</p>
 
         <label for="fphone">Their phone number</label>
-        <input type="tel" id="fphone" inputmode="numeric" placeholder="So I can reach them">
+        <input type="tel" id="fphone" inputmode="numeric" placeholder="So I can recognise them when they message">
         <p class="err" id="e-fphone">Please add a valid phone number.</p>
 
         <label for="femail">Their email <span class="opt">— optional</span></label>
@@ -321,6 +401,12 @@
         <input type="text" id="fnote" placeholder="What they're struggling with">
       </fieldset>
 
+      <label class="check" for="consent">
+        <input type="checkbox" id="consent">
+        <span>I've spoken to them, and they're happy for me to pass their details on.</span>
+      </label>
+      <p class="err" id="e-consent">Please confirm you've spoken to them first.</p>
+
       <button type="submit" class="btn btn-wa" id="btn-send">Send this to Manika on WhatsApp</button>
       <p class="fine" style="text-align:center; margin:6px 0 0;">
         Opens WhatsApp with everything filled in. Nothing is stored on this page.
@@ -329,9 +415,9 @@
 
     <div id="sent">
       <div class="tick">✓</div>
-      <h2 style="margin-bottom:10px;">Sent. Thank you.</h2>
+      <h2 style="margin-bottom:10px;">Noted. Thank you.</h2>
       <p class="fine" style="margin-bottom:20px;">
-        I'll reach out to them personally, and I'll let you know once they've enrolled.
+        I'll be ready when they message me, and I'll let you know the moment they enrol.
       </p>
       <button class="btn btn-ghost" id="btn-again">Refer someone else</button>
     </div>
@@ -354,6 +440,7 @@
       <li>There's no limit. Refer one parent or ten.</li>
       <li>Your 20% is worked out from your own DMIT, so it's the same whoever you send.</li>
       <li>It's paid on parents who actually enrol — not on enquiries.</li>
+      <li>I will never cold-call anyone you name here. They come to me when they're ready, or not at all.</li>
       <li>I'll always tell you when someone you sent has enrolled. You won't have to ask.</li>
       <li>I'd rather you sent this to two parents who genuinely need it than twenty who don't. This only works while it stays a real recommendation.</li>
       <li>Anything unclear — message me. I'll answer myself.</li>
@@ -381,7 +468,18 @@
 
   const waBase = 'https://wa.me/' + CONFIG.whatsapp + '?text=';
   $('btn-ask').href = waBase + encodeURIComponent('Hi Manika, I have a question about the DMIT referral.');
-  $('btn-closed-wa').href = waBase + encodeURIComponent('Hi Manika, there\'s a parent I\'d like you to speak to.');
+  $('btn-closed-wa').href = waBase + encodeURIComponent('Hi Manika, there\'s a parent I\'d like to tell about DMIT.');
+
+  // ---- the message the referrer forwards to their friend ----
+  const introMsg =
+"This is Manika Goel — she's the one who did my child's DMIT.\n\n" +
+"She's a mind performance coach and counselling psychologist. The assessment showed us how my child's brain actually works — how they learn, and why certain things were so hard for them. It changed how I speak to them.\n\n" +
+"Message her directly, she'll explain it properly:\n" +
+"https://wa.me/" + CONFIG.whatsapp + "\n\n" +
+"Do mention my name when you write to her.";
+
+  $('intro-preview').textContent = introMsg;
+  $('btn-intro').href = 'https://wa.me/?text=' + encodeURIComponent(introMsg);
 
   if(!live){
     $('offer-card').style.display = 'none';
@@ -411,6 +509,11 @@
     const em = $('femail').value.trim();
     ok = setErr('femail', em.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) && ok;
 
+    const noConsent = !$('consent').checked;
+    $('consent').closest('label').classList.toggle('bad', noConsent);
+    $('e-consent').classList.toggle('show', noConsent);
+    ok = !noConsent && ok;
+
     return ok;
   }
 
@@ -418,13 +521,20 @@
   ['rname','rphone','fname','fphone','femail'].forEach(id => {
     $(id).addEventListener('input', () => setErr(id, false));
   });
+  $('consent').addEventListener('change', function(){
+    this.closest('label').classList.remove('bad');
+    $('e-consent').classList.remove('show');
+  });
 
   // ---- submit ----
   $('ref-form').addEventListener('submit', function(e){
     e.preventDefault();
     if(!validate()){
-      const firstBad = document.querySelector('input.bad');
-      if(firstBad){ firstBad.focus(); firstBad.scrollIntoView({block:'center', behavior:'smooth'}); }
+      const firstBad = document.querySelector('input.bad, label.check.bad');
+      if(firstBad){
+        if(firstBad.tagName === 'INPUT') firstBad.focus();
+        firstBad.scrollIntoView({block:'center', behavior:'smooth'});
+      }
       return;
     }
 
@@ -434,7 +544,7 @@
       'DMIT REFERRAL' +
       '\n\nFrom: ' + $('rname').value.trim() +
       '\nMy number: ' + $('rphone').value.trim() +
-      '\n\nI\'m referring:' +
+      '\n\nI\'ve spoken to this parent and they\'ll be reaching out to you:' +
       '\nName: ' + $('fname').value.trim() +
       '\nPhone: ' + $('fphone').value.trim() +
       line('Email', $('femail').value.trim()) +
@@ -449,8 +559,29 @@
   });
 
   // ---- refer another: keep their details, clear the friend's ----
+  $('btn-copy-intro').addEventListener('click', function(){
+    const done = () => { this.textContent = 'Copied ✓'; setTimeout(() => { this.textContent = 'Copy it instead'; }, 1900); };
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(introMsg).then(done).catch(() => fallbackCopy(introMsg, done));
+    } else {
+      fallbackCopy(introMsg, done);
+    }
+  });
+
+  function fallbackCopy(text, done){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
   $('btn-again').addEventListener('click', function(){
     ['fname','fphone','femail','fage','fnote'].forEach(id => { $(id).value = ''; });
+    $('consent').checked = false;
     $('sent').style.display = 'none';
     $('ref-form').style.display = 'block';
     $('fname').focus();
