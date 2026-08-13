@@ -11,3 +11,4 @@ README.md
 .gitignore
 .env
 .env.*
+wrangler-refer.jsonc

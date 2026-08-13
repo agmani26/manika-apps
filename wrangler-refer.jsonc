@@ -1,0 +1,11 @@
+{
+  "name": "manika-refer",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "directory": "./refer",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "refer.manikagoel.com", "custom_domain": true }
+  ]
+}
