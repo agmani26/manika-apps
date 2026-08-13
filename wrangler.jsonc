@@ -1,13 +1,22 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "manika-apps",
+  "main": "./src/index.js",
   "compatibility_date": "2024-09-23",
   "assets": {
     "directory": "./",
-    "not_found_handling": "404-page"
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // The Worker must see the request before any file is served, otherwise the
+    // paid pages would be handed out before the access code is ever checked.
+    "run_worker_first": true
   },
+  // The apex manikagoel.com is NOT listed here on purpose. It has externally
+  // managed DNS records, so Cloudflare refuses to bind it — and while it was
+  // listed, that failure blocked every deployment ("No targets deployed"),
+  // meaning Worker changes never actually went live. Don't add it back without
+  // first clearing those DNS records.
   "routes": [
-    { "pattern": "apps.manikagoel.com", "custom_domain": true },
-    { "pattern": "manikagoel.com", "custom_domain": true }
+    { "pattern": "apps.manikagoel.com", "custom_domain": true }
   ]
 }

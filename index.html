@@ -3,50 +3,132 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Manika Goel</title>
+<title>Manika Goel — Tools</title>
 <meta name="robots" content="noindex" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#F5F9FD;
+    --surface:#ffffff;
     --ink:#0E1526;
     --ink-2:#5b6864;
     --teal:#1E6B67;
+    --teal-soft:#DCEAE7;
+    --gold-soft:#F1E4C6;
+    --gold-ink:#6b5119;
+    --line:rgba(22,27,46,0.14);
   }
   @media (prefers-color-scheme: dark){
-    :root{ --bg:#0E1526; --ink:#E4EEF9; --ink-2:#9aa8ad; --teal:#74ab97; }
+    :root{
+      --bg:#0E1526;
+      --surface:#18202f;
+      --ink:#E4EEF9;
+      --ink-2:#9aa8ad;
+      --teal:#74ab97;
+      --teal-soft:#1d3630;
+      --gold-soft:#3a3018;
+      --gold-ink:#e0c98f;
+      --line:rgba(228,238,249,0.16);
+    }
   }
   *{ box-sizing:border-box; }
-  html,body{ height:100%; margin:0; }
   body{
+    margin:0;
     background:var(--bg);
     color:var(--ink);
     font-family:'Inter', -apple-system, "Segoe UI", sans-serif;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:32px;
+    line-height:1.6;
   }
+  .page{ max-width:580px; margin:0 auto; padding:60px 24px 72px; }
   h1{
     font-family:'Fraunces', Georgia, serif;
     font-weight:400;
     font-size:1.9rem;
     letter-spacing:-.01em;
-    margin:0 0 12px;
+    margin:0 0 6px;
   }
-  p{ color:var(--ink-2); margin:0 0 22px; font-size:.98rem; line-height:1.6; }
-  a{ color:var(--teal); text-decoration:none; font-weight:500; }
-  a:hover{ text-decoration:underline; }
+  .sub{ color:var(--ink-2); font-size:.95rem; margin:0 0 36px; }
+
+  h2{
+    font-family:'Inter', sans-serif;
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--teal);
+    margin:34px 0 14px;
+  }
+  h2:first-of-type{ margin-top:0; }
+
+  a.card{
+    display:block;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:11px;
+    padding:18px 20px;
+    margin-bottom:11px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:border-color .15s ease, transform .08s ease;
+  }
+  a.card:hover{ border-color:var(--teal); }
+  a.card:active{ transform:scale(.995); }
+  a.card strong{ display:block; margin-bottom:3px; font-weight:600; }
+  a.card span{ color:var(--ink-2); font-size:.89rem; display:block; }
+
+  .tag{
+    display:inline-block;
+    font-size:.66rem;
+    font-weight:600;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    border-radius:4px;
+    padding:3px 8px;
+    margin-left:8px;
+    vertical-align:2px;
+  }
+  .tag-locked{ background:var(--gold-soft); color:var(--gold-ink); }
+  .tag-open{ background:var(--teal-soft); color:var(--teal); }
+
+  footer{
+    margin-top:40px;
+    padding-top:22px;
+    border-top:1px solid var(--line);
+    color:var(--ink-2);
+    font-size:.85rem;
+  }
 </style>
 </head>
 <body>
-  <div>
+  <div class="page">
     <h1>Manika Goel</h1>
-    <p>Mind Performance Coach &amp; Counselling Psychologist</p>
-    <p><a href="https://dmit.manikagoel.com">dmit.manikagoel.com</a></p>
+    <p class="sub">Mind Performance Coach &amp; Counselling Psychologist</p>
+
+    <h2>Programme access</h2>
+    <a class="card" href="/focus-challenge-hub-selfstart/">
+      <strong>7-Day Focus Reset Challenge <span class="tag tag-locked">Code needed</span></strong>
+      <span>Daily videos. Starts from the day you first open it.</span>
+    </a>
+    <a class="card" href="/focus-challenge-hub/">
+      <strong>Focus Reset Challenge — First Batch <span class="tag tag-locked">Code needed</span></strong>
+      <span>The original cohort's copy. All days unlocked.</span>
+    </a>
+
+    <h2>Open to everyone</h2>
+    <a class="card" href="/learning-style-discovery/">
+      <strong>The Learning Style Discovery <span class="tag tag-open">Free</span></strong>
+      <span>A short assessment for parents — how your child actually learns.</span>
+    </a>
+    <a class="card" href="https://dmit.manikagoel.com">
+      <strong>DMIT <span class="tag tag-open">Free</span></strong>
+      <span>Understand your child beyond marks.</span>
+    </a>
+
+    <footer>
+      Anything marked <em>Code needed</em> opens with the access code sent to you when you joined.
+    </footer>
   </div>
 </body>
 </html>
