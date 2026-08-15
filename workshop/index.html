@@ -708,15 +708,86 @@
     <span class="badge on-dark"><span class="badge-dot"></span>Free Live Workshop — Limited Seats</span>
     <h2>Your Child's Focus Won't Improve Someday. It Starts With Tonight's Decision.</h2>
     <p class="lede">Bring 90 minutes, and leave with the real reason, the reframe, and one thing to try — tonight.</p>
-    <div class="cta-wrap">
-      <a href="#" class="cta">Reserve My Seat →</a>
+    <form id="registerForm" class="register-form" novalidate>
+      <input type="text" name="name" id="regName" placeholder="Parent's Full Name" required autocomplete="name">
+      <input type="tel" name="phone" id="regPhone" placeholder="WhatsApp Number" required autocomplete="tel">
+      <input type="email" name="email" id="regEmail" placeholder="Email Address" required autocomplete="email">
+      <div class="cta-wrap">
+        <button type="submit" class="cta" id="regSubmitBtn">Reserve My Seat →</button>
+      </div>
+      <p id="regError" class="reg-error" role="alert" style="display:none;"></p>
+    </form>
+
+    <div id="regThankYou" class="reg-thankyou" style="display:none;">
+      <h3>You're in! 🎉</h3>
+      <p>Thanks for registering — we've saved your seat. Tap below to join the WhatsApp group for the workshop link and reminders.</p>
+      <a href="https://chat.whatsapp.com/PLACEHOLDER-JOIN-LINK" target="_blank" rel="noopener" class="cta">Join the WhatsApp Group →</a>
     </div>
+
     <div class="final-meta-row">
       <span>Live &amp; interactive</span><span>·</span><span>No payment, ever</span><span>·</span><span>Guided by Manika Goel</span>
     </div>
-    <div class="todo-box"><b>TODO for Manika:</b> confirm the date/time and swap this button's link for your live registration link (Topmate or a form) once ready.</div>
   </div>
 </section>
+
+<style>
+  .register-form{margin-top:30px;display:flex;flex-direction:column;gap:12px;max-width:400px;margin-left:auto;margin-right:auto;}
+  .register-form input{width:100%;box-sizing:border-box;padding:14px 16px;border-radius:9px;border:1px solid rgba(243,234,228,0.25);background:rgba(255,255,255,0.06);color:#FBF3EC;font-family:'Inter',sans-serif;font-size:15px;}
+  .register-form input::placeholder{color:#C9B7B1;}
+  .register-form input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+  .register-form .cta-wrap{margin-top:6px;}
+  .register-form .cta:disabled{opacity:0.6;cursor:not-allowed;}
+  .reg-error{color:#FFD1C2;font-size:13px;margin-top:10px;}
+  .reg-thankyou{max-width:420px;margin:0 auto;}
+  .reg-thankyou h3{font-family:'Fraunces',serif;color:#FBF3EC;font-size:24px;margin-bottom:10px;}
+  .reg-thankyou p{color:#D9C9C4;font-size:14.5px;line-height:1.6;margin-bottom:20px;}
+</style>
+
+<script>
+(function(){
+  var form = document.getElementById('registerForm');
+  if(!form) return;
+  var errorEl = document.getElementById('regError');
+  var btn = document.getElementById('regSubmitBtn');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    errorEl.style.display = 'none';
+    var name = document.getElementById('regName').value.trim();
+    var phone = document.getElementById('regPhone').value.trim();
+    var email = document.getElementById('regEmail').value.trim();
+    if(!name || !phone || !email){
+      errorEl.textContent = 'Please fill in all fields.';
+      errorEl.style.display = 'block';
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = 'Reserving...';
+    fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, phone: phone, email: email })
+    })
+    .then(function(res){ return res.json().then(function(data){ return { ok: res.ok, data: data }; }); })
+    .then(function(result){
+      if(!result.ok){
+        errorEl.textContent = (result.data && result.data.error) || 'Something went wrong. Please try again.';
+        errorEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Reserve My Seat →';
+        return;
+      }
+      form.style.display = 'none';
+      document.getElementById('regThankYou').style.display = 'block';
+    })
+    .catch(function(){
+      errorEl.textContent = 'Network error — please check your connection and try again.';
+      errorEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Reserve My Seat →';
+    });
+  });
+})();
+</script>
 
 <footer>Being Performer — The F.O.C.U.S. Method™ · helping parents understand the child in front of them. © 2026</footer>
 
