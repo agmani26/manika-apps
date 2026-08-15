@@ -1,0 +1,11 @@
+{
+  "name": "manika-workshop",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "directory": "./workshop",
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "workshop.manikagoel.com", "custom_domain": true }
+  ]
+}
