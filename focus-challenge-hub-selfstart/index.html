@@ -293,6 +293,7 @@
   ];
 
   var STORAGE_KEY = "focusChallengeStartDate";
+  var COOKIE_KEY = "focusStartDate";
 
   function todayIST() {
     var now = new Date();
@@ -313,20 +314,36 @@
     return { y: dt.getUTCFullYear(), m: dt.getUTCMonth(), d: dt.getUTCDate() };
   }
 
-  // First visit ever on this device/browser sets the anchor date. Every
-  // visit after that reuses the same stored anchor, so the countdown
-  // keeps counting forward instead of resetting on every reload.
+  function getCookie(name) {
+    var match = document.cookie.match(new RegExp("(?:^|; )" + name + "=([^;]*)"));
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function setCookie(name, value) {
+    var maxAge = 60 * 60 * 24 * 180; // 180 days, matches the access-code cookie
+    document.cookie = name + "=" + encodeURIComponent(value) +
+      "; Max-Age=" + maxAge + "; Path=/; Secure; SameSite=Lax";
+  }
+
+  // First visit ever sets the anchor date. Every visit after that reuses the
+  // same stored anchor, so the countdown keeps counting forward instead of
+  // resetting on every reload. Stored in BOTH localStorage and a cookie,
+  // because some in-app browsers (WhatsApp, Instagram) silently fail to
+  // persist localStorage between sessions while cookies survive fine -- if
+  // the two ever disagree, the earlier date wins, since that's the real
+  // first-visit date and the later one is just a session that lost its memory.
   var today = todayIST();
-  var startDateStr = localStorage.getItem(STORAGE_KEY);
+  var localDate = null;
+  try { localDate = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+  var cookieDate = getCookie(COOKIE_KEY);
+
+  var startDateStr = [localDate, cookieDate].filter(Boolean).sort()[0];
   if (!startDateStr) {
     startDateStr = toDateString(today);
-    try {
-      localStorage.setItem(STORAGE_KEY, startDateStr);
-    } catch (e) {
-      // Private browsing / storage blocked -- falls back to "today" every
-      // visit, which just means Day 0 stays open. Harmless degradation.
-    }
   }
+
+  try { localStorage.setItem(STORAGE_KEY, startDateStr); } catch (e) {}
+  setCookie(COOKIE_KEY, startDateStr);
 
   var todayStr = toDateString(today);
   var container = document.getElementById("days");
