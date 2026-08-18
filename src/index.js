@@ -20,6 +20,7 @@ const ACCESS_CODES = [
 const GATED_PATHS = [
   "/focus-challenge-hub/",
   "/focus-challenge-hub-selfstart/",
+  "/focus-challenge-hub-selfstart-b/",
 ];
 
 // How long someone stays signed in after entering a code — 180 days.
