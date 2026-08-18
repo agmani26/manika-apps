@@ -343,7 +343,10 @@
 
   var startDateStr = [localDate, cookieDate].filter(Boolean).sort()[0];
   if (!startDateStr) {
-    startDateStr = toDateString(today);
+    // Backdated to 2026-08-17 (not today) -- this parent already watched
+    // Day 0 that day on the original stuck link, so her first visit here
+    // should open with Day 1 already unlocked, not restart at Day 0.
+    startDateStr = "2026-08-17";
   }
 
   try { localStorage.setItem(STORAGE_KEY, startDateStr); } catch (e) {}
