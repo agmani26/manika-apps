@@ -493,6 +493,49 @@
     margin-top: 0;
   }
 
+  .plan-list {
+    list-style: none;
+    margin: 0; padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .plan-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 12px;
+    font-size: 15px;
+    color: var(--ink-soft);
+  }
+  .plan-week {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 13px;
+    color: var(--result-color, var(--orange));
+    flex: none;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .cta-panel-secondary {
+    background: transparent;
+    border: 1.5px solid var(--line);
+    color: var(--ink);
+  }
+  .cta-panel-secondary .eyebrow {
+    color: var(--ink-faint);
+  }
+  .cta-panel-secondary p {
+    color: var(--ink-soft);
+  }
+  .cta-panel-secondary .btn-ghost {
+    width: 100%;
+    margin-top: 0;
+    border-color: var(--ink-faint);
+  }
+
   .retake-row {
     margin-top: 22px;
     text-align: center;
@@ -530,7 +573,9 @@
   /* ============ CONFIG — Manika: fill these in ============ */
   var CONFIG = {
     // Where the final "Get the full DMIT report" button sends parents
-    dmitLink: "https://dmit.manikagoel.com"
+    dmitLink: "https://dmit.manikagoel.com",
+    // Where the "Join the free parent workshop" button sends parents
+    workshopLink: "https://workshop.manikagoel.com"
   };
 
   /* ============ Icons ============ */
@@ -555,91 +600,91 @@
   /* ============ Content data ============ */
   var QUESTIONS = [
     {
-      text: "Your child is trying to remember a phone number or a list. He/she usually:",
+      text: "Give your child a phone number or a short list to remember, right now. Watch what he/she does first:",
       options: [
-        { t: "Pictures it in his/her head, almost like reading it off a page", type: "V" },
-        { t: "Repeats it out loud, again and again, until it sticks", type: "A" },
-        { t: "Writes it down or traces it with a finger while saying it", type: "K" }
+        { t: "Pictures it in his/her head — almost like reading it off a page", type: "V" },
+        { t: "Says it out loud, again and again, until it sticks", type: "A" },
+        { t: "Writes it down, or traces it with a finger while saying it", type: "K" }
       ]
     },
     {
-      text: "When you're explaining something new, your child understands it best when you:",
+      text: "You're explaining something brand new. What actually gets it to land?",
       options: [
-        { t: "Draw a diagram or show him/her a picture", type: "V" },
-        { t: "Just explain it out loud, step by step", type: "A" },
-        { t: "Let him/her try it himself/herself, right away", type: "K" }
+        { t: "Drawing it, or showing him/her a picture", type: "V" },
+        { t: "Just explaining it out loud, step by step", type: "A" },
+        { t: "Letting him/her try it himself/herself, right away", type: "K" }
       ]
     },
     {
-      text: "During homework, your child is most thrown off by:",
+      text: "Mid-homework, what derails your child in seconds?",
       options: [
-        { t: "A messy or cluttered desk around him/her", type: "V" },
-        { t: "Background noise or people talking nearby", type: "A" },
-        { t: "Having to sit still for too long", type: "K" }
+        { t: "A messy, cluttered desk in front of him/her", type: "V" },
+        { t: "Noise, or people talking nearby", type: "A" },
+        { t: "Having to sit still too long", type: "K" }
       ]
     },
     {
-      text: "When your child is upset about something, he/she usually:",
+      text: "Something upsets your child. What does he/she reach for first?",
       options: [
-        { t: "Goes quiet and wants to be alone to think it through", type: "V" },
-        { t: "Wants to talk it out with you, right away", type: "A" },
-        { t: "Needs to move, pace, or fidget before he/she can talk", type: "K" }
+        { t: "Quiet — he/she wants to be alone to think it through", type: "V" },
+        { t: "You — he/she wants to talk it out right away", type: "A" },
+        { t: "Movement — he/she needs to pace or fidget before he/she can even talk", type: "K" }
       ]
     },
     {
-      text: "When it's time to prepare for a test, your child's instinct is to:",
+      text: "The night before a test, your child's first instinct is to:",
       options: [
         { t: "Re-read notes and highlight the key points", type: "V" },
-        { t: "Read the notes out loud, or explain them to someone", type: "A" },
-        { t: "Make flashcards, walk around, or act it out", type: "K" }
+        { t: "Read them out loud, or explain them to someone", type: "A" },
+        { t: "Make flashcards and walk around with them, or act it out", type: "K" }
       ]
     },
     {
-      text: "In class, your child pays attention best to a teacher who:",
+      text: "Which teacher actually holds your child's attention?",
       options: [
-        { t: "Writes on the board and uses slides or charts", type: "V" },
-        { t: "Tells stories and explains things conversationally", type: "A" },
-        { t: "Gets the class involved in activities or demos", type: "K" }
+        { t: "One who writes on the board, uses slides or charts", type: "V" },
+        { t: "One who tells stories and talks things through", type: "A" },
+        { t: "One who gets the class up and doing something", type: "K" }
       ]
     },
     {
-      text: "When your child is bored, he/she tends to:",
+      text: "Truly bored — not pretending. What does your child do?",
       options: [
-        { t: "Doodle, or stare off at something", type: "V" },
-        { t: "Hum, talk to himself/herself, or chatter", type: "A" },
-        { t: "Fidget, tap, or need to get up and move", type: "K" }
+        { t: "Doodles, or stares off at something", type: "V" },
+        { t: "Hums, talks to himself/herself, or chatters", type: "A" },
+        { t: "Fidgets, taps, or has to get up and move", type: "K" }
       ]
     },
     {
-      text: "Your child remembers a movie or story mainly by:",
+      text: "Your child is describing a favourite movie or story. What comes out first?",
       options: [
-        { t: "The way things looked — scenes, faces, colours", type: "V" },
-        { t: "The dialogue — what people said", type: "A" },
-        { t: "How it felt — the excitement, the tension", type: "K" }
+        { t: "How things looked — the scenes, the faces, the colours", type: "V" },
+        { t: "What people said — the lines, the dialogue", type: "A" },
+        { t: "How it felt — the tension, the excitement", type: "K" }
       ]
     },
     {
-      text: "When your child gives someone directions to a place he/she knows well, he/she is most likely to:",
+      text: "Ask your child for directions somewhere he/she knows well. What happens?",
       options: [
-        { t: "Describe landmarks and what the route looks like", type: "V" },
-        { t: "Explain it step by step, talking it through out loud", type: "A" },
-        { t: "Just want to walk you there instead of explaining", type: "K" }
+        { t: "He/she describes landmarks and what the route looks like", type: "V" },
+        { t: "He/she explains it step by step, talking it through", type: "A" },
+        { t: "He/she just wants to walk you there instead", type: "K" }
       ]
     },
     {
-      text: "When learning a brand-new game or sport, your child prefers to:",
+      text: "Handed a brand-new game with no instructions, your child's first move is to:",
       options: [
         { t: "Watch someone else play it first", type: "V" },
-        { t: "Have the rules explained before starting", type: "A" },
+        { t: "Ask for the rules to be explained", type: "A" },
         { t: "Jump in and figure it out by playing", type: "K" }
       ]
     },
     {
-      text: "When it comes to reading, your child:",
+      text: "Open a new book together. What does your child actually do?",
       options: [
-        { t: "Pictures the scenes vividly while reading", type: "V" },
-        { t: "Prefers being read to, or reading out loud", type: "A" },
-        { t: "Gets restless with long reading and prefers action-packed books", type: "K" }
+        { t: "Pictures the scenes vividly as he/she reads", type: "V" },
+        { t: "Wants to be read to, or reads out loud", type: "A" },
+        { t: "Gets restless fast, and reaches for something action-packed", type: "K" }
       ]
     }
   ];
@@ -692,7 +737,13 @@
         "Let him/her picture the answer in his/her head first, then write it down.",
         "Keep the study space visually calm — clutter around him/her is as distracting as noise is for other kids."
       ],
-      watchout: "He/she can look distracted when someone just talks at him/her for too long. It's not that he/she has stopped listening — his/her brain needs something to look at to actually lock the information in."
+      watchout: "He/she can look distracted when someone just talks at him/her for too long. It's not that he/she has stopped listening — his/her brain needs something to look at to actually lock the information in.",
+      plan: [
+        { week: "Week 1", t: "Turn tonight's homework into one mind-map or diagram before he/she reads a single line of notes." },
+        { week: "Week 1", t: "Swap one flashcard session for colour-coded index cards — same information, something to actually look at." },
+        { week: "Week 2", t: "Ask him/her to teach a topic back to you using only a drawing — no words for the first minute." },
+        { week: "Week 2", t: "Clear the desk before every study session. For this learner, visual clutter is real distraction, not laziness." }
+      ]
     },
     A: {
       name: "Auditory",
@@ -705,7 +756,13 @@
         "Protect quiet over background music — verbal processors get overloaded by competing sound faster than most.",
         "Discussion beats re-reading. Talking a topic through with you counts as genuine revision."
       ],
-      watchout: "He/she can seem like he/she is “not paying attention” when he/she is actually processing perfectly well — being made to write everything down while listening often interrupts him/her more than it helps."
+      watchout: "He/she can seem like he/she is “not paying attention” when he/she is actually processing perfectly well — being made to write everything down while listening often interrupts him/her more than it helps.",
+      plan: [
+        { week: "Week 1", t: "Let him/her read tonight's notes out loud instead of silently — even once, it changes what sticks." },
+        { week: "Week 1", t: "Record a 2-minute voice note explaining a topic back to you, then play it back together." },
+        { week: "Week 2", t: "Try a \"teach-back\" — he/she explains a concept to you like you're the student." },
+        { week: "Week 2", t: "Protect one music-free, quiet study window. Verbal processors lose focus fastest to competing sound." }
+      ]
     },
     K: {
       name: "Kinesthetic",
@@ -718,7 +775,13 @@
         "Break study into short physical blocks — 15 to 20 minutes, with a movement break in between.",
         "Hands-on practice — writing it out, building it, acting it out — beats reading about it, every time."
       ],
-      watchout: "This is the child most likely to get labelled “can't sit still” or “easily distracted.” In reality, sitting still is often what's blocking his/her focus — not fixing it."
+      watchout: "This is the child most likely to get labelled “can't sit still” or “easily distracted.” In reality, sitting still is often what's blocking his/her focus — not fixing it.",
+      plan: [
+        { week: "Week 1", t: "Break tonight's study block into 15-minute chunks with a 2-minute movement break between each." },
+        { week: "Week 1", t: "Let him/her walk, pace, or use a stress ball while reviewing flashcards — moving is not avoiding." },
+        { week: "Week 2", t: "Turn one concept into something built, acted out, or written by hand instead of just read." },
+        { week: "Week 2", t: "Stop asking him/her to \"sit still and focus.\" Ask him/her to \"move and focus\" instead, and watch what changes." }
+      ]
     }
   };
 
@@ -785,8 +848,8 @@
     return (
       '<div class="intro-hero card">' +
         '<div class="eyebrow">A free 5-minute brain wiring snapshot · by Manika Goel</div>' +
-        '<h1 class="display">Before you label your child “distracted”…<span class="line2 display-italic">find out how his/her brain actually learns.</span></h1>' +
-        '<p class="intro-sub">Every child leans Visual, Auditory, or Kinesthetic. When teaching matches it, focus comes easily. When it doesn’t, even a bright, capable child looks distracted. This takes about 5 minutes — with your child sitting next to you.</p>' +
+        '<h1 class="display">What if it isn’t “distraction”…<span class="line2 display-italic">but a learning pattern nobody’s taught your child to use?</span></h1>' +
+        '<p class="intro-sub">Every child leans Visual, Auditory, or Kinesthetic. When teaching matches it, focus comes easily. When it doesn’t, even a bright, capable child looks distracted — and gets labelled for it. This takes about 5 minutes, with your child sitting next to you, and ends with a plan, not just a label.</p>' +
         '<div class="intro-meta">' +
           '<span>' + ICONS.clock + ' 5 minutes</span>' +
           '<span>' + ICONS.child + ' Do it together with your child</span>' +
@@ -908,7 +971,12 @@
       ? "Strongly " + info.name + ", with a real streak of " + STYLE_INFO[secondary].name.toLowerCase() + " too."
       : "A clear " + info.name.toLowerCase() + " lean — this is how " + name + " processes most things.";
 
+    var planHtml = info.plan.map(function (p) {
+      return '<li><span class="plan-week">' + p.week + '</span><span>' + p.t + '</span></li>';
+    }).join("");
+
     var dmitHref = CONFIG.dmitLink || "#";
+    var workshopHref = CONFIG.workshopLink || "#";
 
     return (
       '<div class="card" style="--result-color:' + info.color + '">' +
@@ -934,10 +1002,21 @@
           '<div class="watchout">' + info.watchout + '</div>' +
         '</div>' +
 
+        '<div class="result-section">' +
+          '<h2>' + name + '’s 2-week quick-start plan</h2>' +
+          '<ul class="plan-list">' + planHtml + '</ul>' +
+        '</div>' +
+
         '<div class="cta-panel">' +
           '<div class="eyebrow">Go deeper</div>' +
           '<p>This is just the surface. A full DMIT report goes much further — personality, behavioural style, natural strengths — and shows you exactly how to work with ' + poss.toLowerCase() + ' wiring, instead of against it.</p>' +
           '<a class="btn btn-primary" href="' + dmitHref + '" target="_blank" rel="noopener">Get ' + name + '’s full DMIT report</a>' +
+        '</div>' +
+
+        '<div class="cta-panel cta-panel-secondary">' +
+          '<div class="eyebrow">Not ready to go 1:1 yet?</div>' +
+          '<p>This pattern — and exactly what to do about it — is what we cover live in the free parent workshop. No pitch, just the plan.</p>' +
+          '<a class="btn btn-ghost" href="' + workshopHref + '" target="_blank" rel="noopener">Join the free parent workshop</a>' +
         '</div>' +
 
         '<div class="retake-row"><button id="retake-btn">Start over</button></div>' +
