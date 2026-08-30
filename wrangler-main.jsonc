@@ -1,0 +1,11 @@
+{
+  "name": "manika-main",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "directory": "./main-site",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "manikagoel.com", "custom_domain": true }
+  ]
+}
