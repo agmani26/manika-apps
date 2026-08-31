@@ -32,6 +32,7 @@
     --ink-faint: rgba(26, 26, 26, 0.38);
     --line: rgba(26, 26, 26, 0.14);
     --yellow: #FFD600;
+    --yellow-ink: #96600A;
     --orange: #FF6B00;
     --on-accent: #17130F;
     --track: rgba(26, 26, 26, 0.1);
@@ -46,6 +47,7 @@
       --ink-faint: rgba(245, 238, 226, 0.42);
       --line: rgba(245, 238, 226, 0.16);
       --yellow: #FFD84D;
+      --yellow-ink: #FFD84D;
       --orange: #FF7F3F;
       --on-accent: #17130F;
       --track: rgba(245, 238, 226, 0.14);
@@ -59,6 +61,7 @@
     --ink-faint: rgba(245, 238, 226, 0.42);
     --line: rgba(245, 238, 226, 0.16);
     --yellow: #FFD84D;
+    --yellow-ink: #FFD84D;
     --orange: #FF7F3F;
     --on-accent: #17130F;
     --track: rgba(245, 238, 226, 0.14);
@@ -71,6 +74,7 @@
     --ink-faint: rgba(26, 26, 26, 0.38);
     --line: rgba(26, 26, 26, 0.14);
     --yellow: #FFD600;
+    --yellow-ink: #96600A;
     --orange: #FF6B00;
     --on-accent: #17130F;
     --track: rgba(26, 26, 26, 0.1);
@@ -290,6 +294,101 @@
     line-height: 1.6;
   }
 
+  /* ---------- Landing page sections ---------- */
+  .trust-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin: 10px 0 0;
+  }
+  .trust-line .stars { color: var(--orange); letter-spacing: 1px; font-size: 13px; }
+
+  .landing-section {
+    padding: 34px 0 4px;
+    margin-top: 30px;
+    border-top: 1px solid var(--line);
+  }
+  .landing-section h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(21px, 4.6vw, 25px);
+    line-height: 1.25;
+    margin: 8px 0 22px;
+  }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 460px) {
+    .value-grid { grid-template-columns: 1fr; }
+  }
+  .value-card {
+    background: color-mix(in srgb, var(--orange) 8%, transparent);
+    border-radius: 10px;
+    padding: 18px 16px;
+  }
+  .value-card .value-icon {
+    width: 34px; height: 34px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--orange) 18%, transparent);
+    color: var(--orange);
+    margin-bottom: 12px;
+  }
+  .value-card .value-icon svg { width: 17px; height: 17px; stroke: currentColor; }
+  .value-card h3 { font-size: 14.5px; font-weight: 700; margin: 0 0 4px; }
+  .value-card p { font-size: 13px; color: var(--ink-soft); margin: 0; line-height: 1.45; }
+
+  .style-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .style-row:last-child { border-bottom: none; }
+  .style-row .style-icon {
+    width: 42px; height: 42px;
+    flex: none;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+  }
+  .style-row .style-icon svg { width: 20px; height: 20px; stroke: currentColor; }
+  .style-row h3 { font-size: 15.5px; font-weight: 700; margin: 0 0 3px; }
+  .style-row p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+  .about-quote {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: 16.5px;
+    line-height: 1.5;
+    margin: 0 0 12px;
+  }
+  .about-byline { font-size: 13px; color: var(--ink-faint); }
+
+  .testimonial-video {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    margin-bottom: 14px;
+    background: var(--track);
+  }
+  .testimonial-video:last-child { margin-bottom: 0; }
+  .testimonial-video iframe {
+    width: 100%; height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .footer-cta { text-align: center; padding-bottom: 10px; }
+  .footer-cta h2 { text-align: center; }
+  .footer-cta .btn-primary { width: auto; padding-left: 34px; padding-right: 34px; }
+
   /* ---------- Question ---------- */
   .q-eyebrow { margin-bottom: 14px; }
   .q-text {
@@ -378,9 +477,19 @@
 
   /* ---------- Results ---------- */
   .result-icon {
-    width: 46px; height: 46px;
+    width: 64px; height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--result-color, var(--orange)) 14%, transparent);
     color: var(--result-color, var(--orange));
     margin-bottom: 18px;
+  }
+  .result-icon svg {
+    width: 30px; height: 30px;
+    stroke: currentColor;
+    display: block;
   }
   .result-eyebrow { color: var(--ink-faint); }
   .result-h1 {
@@ -730,6 +839,7 @@
       name: "Visual",
       icon: "eye",
       color: "var(--orange)",
+      ink: "var(--orange)",
       tagline: "sees to understand",
       meansP: "shows things to your child before or while you explain them, and his/her focus, memory, and confidence all improve. Words alone, without something to look at, make him/her work much harder than he/she needs to.",
       tries: [
@@ -749,6 +859,7 @@
       name: "Auditory",
       icon: "ear",
       color: "var(--yellow)",
+      ink: "var(--yellow-ink)",
       tagline: "hears to understand",
       meansP: "talks things through with your child, out loud, and lets him/her explain concepts back to you. That back-and-forth is real studying for him/her — far more than staring at a page ever will be.",
       tries: [
@@ -768,6 +879,7 @@
       name: "Kinesthetic",
       icon: "pulse",
       color: "var(--orange)",
+      ink: "var(--orange)",
       tagline: "does to understand",
       meansP: "lets your child move while he/she learns, instead of asking him/her to sit still and focus. For this child, stillness isn't focus — it's often the very thing standing in the way of it.",
       tries: [
@@ -845,16 +957,40 @@
   }
 
   function renderIntro() {
+    var stars = '★★★★★';
+
+    var styleRowsHtml = ["V", "A", "K"].map(function (k) {
+      var s = STYLE_INFO[k];
+      return (
+        '<div class="style-row">' +
+          '<div class="style-icon" style="background:color-mix(in srgb, ' + s.ink + ' 16%, transparent); color:' + s.ink + '">' + ICONS[s.icon] + '</div>' +
+          '<div><h3>' + s.name + '</h3><p>A child who ' + s.tagline + '.</p></div>' +
+        '</div>'
+      );
+    }).join("");
+
+    var videoIds = ["urGSpyQutoc", "4O_u5GnCn1U", "lK6vK5Jmo3s"];
+    var testimonialVideosHtml = videoIds.map(function (id) {
+      return (
+        '<div class="testimonial-video">' +
+          '<iframe src="https://www.youtube.com/embed/' + id + '" title="Parent testimonial" loading="lazy" allowfullscreen></iframe>' +
+        '</div>'
+      );
+    }).join("");
+
+    var poss = possessive(state.childName.trim());
+
     return (
       '<div class="intro-hero card">' +
         '<div class="eyebrow">A free 5-minute brain wiring snapshot · by Manika Goel</div>' +
+        '<div class="trust-line"><span class="stars">' + stars + '</span> 4.8 on Trustpilot · trusted by parents across India</div>' +
         '<h1 class="display">What if it isn’t “distraction”…<span class="line2 display-italic">but a learning pattern nobody’s taught your child to use?</span></h1>' +
         '<p class="intro-sub">Every child leans Visual, Auditory, or Kinesthetic. When teaching matches it, focus comes easily. When it doesn’t, even a bright, capable child looks distracted — and gets labelled for it. This takes about 5 minutes, with your child sitting next to you, and ends with a plan, not just a label.</p>' +
         '<div class="intro-meta">' +
           '<span>' + ICONS.clock + ' 5 minutes</span>' +
           '<span>' + ICONS.child + ' Do it together with your child</span>' +
         '</div>' +
-        '<div class="field-group">' +
+        '<div class="field-group" id="start-fields">' +
           '<div class="field">' +
             '<label for="f-name">Child’s name</label>' +
             '<input id="f-name" type="text" placeholder="e.g. Aarav" value="' + escapeAttr(state.childName) + '" />' +
@@ -864,8 +1000,43 @@
             '<input id="f-age" type="number" min="4" max="20" placeholder="e.g. 11" value="' + escapeAttr(state.childAge) + '" />' +
           '</div>' +
         '</div>' +
-        '<button class="btn btn-primary" id="start-btn">Start the discovery</button>' +
+        '<button class="btn btn-primary" id="start-btn">Take the free assessment</button>' +
         '<div class="fine-print">Manika Goel · Mind Performance Coach &amp; Counselling Psychologist. Your answers stay on this device — nothing is recorded until you choose to share your result.</div>' +
+      '</div>' +
+
+      '<div class="landing-section">' +
+        '<div class="eyebrow">What you’ll discover</div>' +
+        '<h2 class="display">Everything you get in 5 minutes</h2>' +
+        '<div class="value-grid">' +
+          '<div class="value-card"><div class="value-icon">' + ICONS.eye + '</div><h3>Their dominant learning style</h3><p>Visual, Auditory, or Kinesthetic — the lens most of their focus and memory runs through.</p></div>' +
+          '<div class="value-card"><div class="value-icon">' + ICONS.pulse + '</div><h3>A focus-fit score</h3><p>How well their current study routine actually matches how they learn.</p></div>' +
+          '<div class="value-card"><div class="value-icon">' + ICONS.clock + '</div><h3>A 2-week quick-start plan</h3><p>Two concrete things to try at home each week — not just a label.</p></div>' +
+          '<div class="value-card"><div class="value-icon">' + ICONS.child + '</div><h3>What it means day to day</h3><p>Why what looks like distraction is often just a mismatch — and what actually helps.</p></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="landing-section">' +
+        '<div class="eyebrow">3 learning styles</div>' +
+        '<h2 class="display">Which one is running your child?</h2>' +
+        styleRowsHtml +
+      '</div>' +
+
+      '<div class="landing-section">' +
+        '<div class="eyebrow">About your guide</div>' +
+        '<p class="about-quote">“Most parents come to me thinking their child has a focus problem or a discipline problem. Almost every time, it’s actually a mismatch — the way they’re being taught doesn’t match how their child’s brain actually takes in information. Once you find the real pattern, everything gets easier, for the child and for you.”</p>' +
+        '<div class="about-byline">— Manika Goel, Mind Performance Coach &amp; Counselling Psychologist</div>' +
+      '</div>' +
+
+      '<div class="landing-section">' +
+        '<div class="eyebrow">What parents are saying</div>' +
+        '<h2 class="display">Real results, real families</h2>' +
+        '<div class="trust-line" style="margin-bottom:18px"><span class="stars">' + stars + '</span> 4.8 out of 5 on Trustpilot</div>' +
+        testimonialVideosHtml +
+      '</div>' +
+
+      '<div class="landing-section footer-cta">' +
+        '<h2 class="display">Ready to see ' + poss + ' pattern?</h2>' +
+        '<button class="btn btn-primary" id="start-btn-footer">Take the free assessment</button>' +
       '</div>'
     );
   }
@@ -979,7 +1150,7 @@
     var workshopHref = CONFIG.workshopLink || "#";
 
     return (
-      '<div class="card" style="--result-color:' + info.color + '">' +
+      '<div class="card" style="--result-color:' + info.ink + '">' +
         '<div class="result-icon">' + ICONS[info.icon] + '</div>' +
         '<div class="eyebrow result-eyebrow">' + name + '’s result</div>' +
         '<h1 class="result-h1 display">' + poss + ' brain leans <span class="style-name display-italic">' + info.name + '</span></h1>' +
@@ -1038,6 +1209,13 @@
         state.qIndex = 0;
         render();
       });
+      var footerBtn = document.getElementById("start-btn-footer");
+      if (footerBtn) {
+        footerBtn.addEventListener("click", function () {
+          document.getElementById("start-fields").scrollIntoView({ behavior: "smooth", block: "center" });
+          nameInput.focus();
+        });
+      }
     }
 
     if (state.screen === "question") {
