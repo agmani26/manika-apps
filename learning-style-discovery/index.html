@@ -361,29 +361,53 @@
   .style-row h3 { font-size: 15.5px; font-weight: 700; margin: 0 0 3px; }
   .style-row p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
 
+  .about-card {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .about-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    flex: none;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    color: var(--on-accent);
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+    font-size: 19px;
+  }
+  .about-name { font-size: 17px; font-weight: 700; margin: 2px 0 6px; }
+  .about-bio { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
+  .about-quote-block {
+    background: color-mix(in srgb, var(--orange) 8%, transparent);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
   .about-quote {
     font-family: 'Playfair Display', Georgia, serif;
     font-style: italic;
-    font-size: 16.5px;
-    line-height: 1.5;
-    margin: 0 0 12px;
+    font-size: 15.5px;
+    line-height: 1.55;
+    margin: 0;
   }
-  .about-byline { font-size: 13px; color: var(--ink-faint); }
 
-  .testimonial-video {
-    position: relative;
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .testi-card {
+    background: color-mix(in srgb, var(--ink) 4%, var(--bg));
+    border: 1px solid var(--line);
     border-radius: 10px;
-    overflow: hidden;
-    aspect-ratio: 16 / 9;
-    margin-bottom: 14px;
-    background: var(--track);
+    padding: 18px 18px 16px;
   }
-  .testimonial-video:last-child { margin-bottom: 0; }
-  .testimonial-video iframe {
-    width: 100%; height: 100%;
-    border: none;
-    display: block;
-  }
+  .testi-card .stars { color: var(--orange); font-size: 14px; letter-spacing: 1px; margin-bottom: 10px; display: block; }
+  .testi-card p { font-size: 14px; font-style: italic; color: var(--ink); line-height: 1.5; margin: 0 0 12px; }
+  .testi-card .testi-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+  .testi-card .testi-role { font-size: 12px; color: var(--ink-faint); }
 
   .footer-cta { text-align: center; padding-bottom: 10px; }
   .footer-cta h2 { text-align: center; }
@@ -969,11 +993,25 @@
       );
     }).join("");
 
-    var videoIds = ["urGSpyQutoc", "4O_u5GnCn1U", "lK6vK5Jmo3s"];
-    var testimonialVideosHtml = videoIds.map(function (id) {
+    var TESTIMONIALS = [
+      {
+        quote: "The first session itself was transformative. Their 10-year-old was a good learner who struggled with focus and time management — one session in, they saw the shift: a clear roadmap, and a more confident child taking action on his own.",
+        name: "Parent",
+        role: "1:1 Personal Coaching"
+      },
+      {
+        quote: "It really helped my daughter control her emotions — and changed my way of thinking too. Three months of personal guidance later, she'd learned to use screen time on her own terms, not the other way around.",
+        name: "Parent",
+        role: "3-Month Coaching Program"
+      }
+    ];
+    var testimonialsHtml = TESTIMONIALS.map(function (t) {
       return (
-        '<div class="testimonial-video">' +
-          '<iframe src="https://www.youtube.com/embed/' + id + '" title="Parent testimonial" loading="lazy" allowfullscreen></iframe>' +
+        '<div class="testi-card">' +
+          '<span class="stars">' + stars + '</span>' +
+          '<p>“' + t.quote + '”</p>' +
+          '<div class="testi-name">' + t.name + '</div>' +
+          '<div class="testi-role">' + t.role + '</div>' +
         '</div>'
       );
     }).join("");
@@ -1023,15 +1061,23 @@
 
       '<div class="landing-section">' +
         '<div class="eyebrow">About your guide</div>' +
-        '<p class="about-quote">“Most parents come to me thinking their child has a focus problem or a discipline problem. Almost every time, it’s actually a mismatch — the way they’re being taught doesn’t match how their child’s brain actually takes in information. Once you find the real pattern, everything gets easier, for the child and for you.”</p>' +
-        '<div class="about-byline">— Manika Goel, Mind Performance Coach &amp; Counselling Psychologist</div>' +
+        '<div class="about-card">' +
+          '<div class="about-avatar">MG</div>' +
+          '<div>' +
+            '<div class="about-name display">Manika Goel</div>' +
+            '<p class="about-bio">Mind Performance Coach &amp; Counselling Psychologist (NFNLP, USA). Helps worried parents unlock the hidden potential of their bright but struggling children — building focus, memory, confidence, and emotional strength through neuroscience-backed brain training, not more tuitions.</p>' +
+          '</div>' +
+        '</div>' +
+        '<div class="about-quote-block">' +
+          '<p class="about-quote">“Most parents come to me thinking their child has a focus problem or a discipline problem. Almost every time, it’s actually a mismatch — the way they’re being taught doesn’t match how their child’s brain actually takes in information. Once you find the real pattern, everything gets easier, for the child and for you.”</p>' +
+        '</div>' +
       '</div>' +
 
       '<div class="landing-section">' +
         '<div class="eyebrow">What parents are saying</div>' +
         '<h2 class="display">Real results, real families</h2>' +
         '<div class="trust-line" style="margin-bottom:18px"><span class="stars">' + stars + '</span> 4.8 out of 5 on Trustpilot</div>' +
-        testimonialVideosHtml +
+        '<div class="testi-grid">' + testimonialsHtml + '</div>' +
       '</div>' +
 
       '<div class="landing-section footer-cta">' +
