@@ -855,9 +855,8 @@ document.addEventListener('keydown', function(e){
         btn.textContent = 'Reserve My Seat →';
         return;
       }
-      form.style.display = 'none';
-      document.getElementById('regThankYou').style.display = 'block';
-      if(typeof fbq === 'function'){ fbq('track', 'Lead'); }
+      // Redirect to the dedicated thank-you page (conversion tracking lives there)
+      window.location.assign('/thank-you');
     })
     .catch(function(){
       errorEl.textContent = 'Network error — please check your connection and try again.';

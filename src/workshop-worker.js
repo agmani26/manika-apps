@@ -30,6 +30,11 @@ export default {
       return json({ ok: true });
     }
 
+    // Clean URL for the post-registration thank-you page (the ads conversion page)
+    if (url.pathname === "/thank-you" || url.pathname === "/thank-you/") {
+      return env.ASSETS.fetch(new Request(new URL("/thank-you.html", url), request));
+    }
+
     return env.ASSETS.fetch(request);
   },
 };
