@@ -1,0 +1,11 @@
+{
+  "name": "manika-scorecard",
+  "compatibility_date": "2024-09-23",
+  "assets": {
+    "directory": "./scorecard",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "scorecard.manikagoel.com", "custom_domain": true }
+  ]
+}

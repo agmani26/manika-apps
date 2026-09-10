@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>The Focus Scorecard — Manika Goel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="A 2-minute check of where your child's focus stands right now. 10 questions, one honest score, and what to do next." />
+<style>
+  :root{
+    --cream:#FAF3E9; --gold:#C9A227; --ink:#2B2118; --muted:#7A6F5E;
+    --paper:#FFFFFF; --plum:#3B2A2E; --rose-dark:#A8452F; --rose:#C1573F;
+    --line:#E7DCC9; --good:#4B7B4B; --mid:#C9A227; --low:#A8452F;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--cream); color:var(--ink); line-height:1.6;
+    padding:24px 16px 60px; min-height:100vh;
+  }
+  .wrap{max-width:620px;margin:0 auto;}
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:20px;
+    padding:34px 30px; box-shadow:0 20px 50px -24px rgba(43,33,24,0.28);
+  }
+  .brand{text-align:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;}
+  h1{font-family:'Fraunces','Georgia',serif;font-size:clamp(24px,5vw,32px);line-height:1.2;text-align:center;color:var(--ink);}
+  h1 .accent{color:var(--rose);}
+  .sub{text-align:center;color:var(--muted);font-size:15px;margin-top:14px;}
+  .rules{background:var(--cream);border-radius:14px;padding:16px 18px;margin-top:22px;font-size:14px;color:var(--muted);}
+  .rules b{color:var(--ink);}
+  .rules ul{margin:8px 0 0;padding-left:18px;}
+  .rules li{margin:4px 0;}
+  button{font-family:inherit;cursor:pointer;border:none;}
+  .btn{
+    display:block;width:100%;background:var(--plum);color:#FBF3EC;font-size:16px;font-weight:600;
+    padding:15px 20px;border-radius:100px;margin-top:24px;transition:transform .12s ease,opacity .12s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.secondary{background:transparent;color:var(--plum);border:1.5px solid var(--line);margin-top:12px;}
+  .btn.gold{background:var(--gold);color:var(--ink);}
+
+  /* progress */
+  .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+  .progress-track{flex:1;height:8px;background:var(--line);border-radius:100px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--rose);width:0;transition:width .3s ease;}
+  .progress-label{font-size:13px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;}
+
+  .q-eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+  .q-text{font-family:'Fraunces','Georgia',serif;font-size:clamp(19px,3.6vw,23px);line-height:1.32;margin-top:10px;color:var(--ink);}
+  .q-help{font-size:14px;color:var(--muted);margin-top:10px;}
+  .answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px;}
+  .answers.three{grid-template-columns:1fr 1fr 1fr;}
+  .ans{
+    background:var(--cream);border:1.5px solid var(--line);border-radius:14px;padding:16px 12px;
+    font-size:15px;font-weight:600;color:var(--ink);transition:all .12s ease;
+  }
+  .ans:hover{border-color:var(--rose);background:#fff;}
+  .back-link{display:inline-block;margin-top:20px;font-size:13px;color:var(--muted);background:none;text-decoration:underline;}
+
+  /* result */
+  .score-ring{
+    width:150px;height:150px;border-radius:50%;margin:6px auto 0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;border:8px solid var(--line);
+  }
+  .score-num{font-family:'Fraunces','Georgia',serif;font-size:44px;line-height:1;color:var(--ink);}
+  .score-of{font-size:13px;color:var(--muted);margin-top:2px;}
+  .band{text-align:center;font-family:'Fraunces','Georgia',serif;font-size:22px;margin-top:18px;}
+  .band-body{text-align:center;color:var(--muted);font-size:15px;margin-top:8px;}
+  .section-title{font-family:'Fraunces','Georgia',serif;font-size:18px;margin:26px 0 10px;color:var(--ink);}
+  .next-list{list-style:none;}
+  .next-list li{position:relative;padding-left:26px;margin:10px 0;font-size:14.5px;color:var(--ink);}
+  .next-list li::before{content:"→";position:absolute;left:0;color:var(--rose);font-weight:700;}
+  .parent-note{background:var(--cream);border-left:3px solid var(--gold);border-radius:8px;padding:14px 16px;font-size:14px;color:var(--muted);margin-top:20px;}
+  .divider{height:1px;background:var(--line);margin:28px 0;}
+  .cta-box{background:var(--plum);color:#F3EAE4;border-radius:16px;padding:22px 20px;text-align:center;margin-top:8px;}
+  .cta-box h3{font-family:'Fraunces','Georgia',serif;font-size:19px;color:#FBF3EC;}
+  .cta-box p{font-size:14px;margin-top:8px;color:#D9C9C4;}
+  .cta-box a{display:inline-block;margin-top:16px;background:var(--gold);color:var(--ink);font-weight:600;font-size:15px;
+    padding:13px 26px;border-radius:100px;text-decoration:none;}
+  .foot{text-align:center;font-size:12px;color:var(--muted);margin-top:26px;}
+  .hidden{display:none;}
+
+  @media (max-width:480px){
+    .card{padding:26px 20px;}
+    .answers.three{grid-template-columns:1fr;}
+  }
+
+  /* print — blank copy for offline use */
+  @media print{
+    body{background:#fff;padding:0;}
+    .card{box-shadow:none;border:none;}
+    .btn,.back-link,.progress-row,.cta-box,.foot{display:none !important;}
+    #screen-intro,#screen-q,#screen-result{display:block !important;}
+    .print-only{display:block !important;}
+    .print-q{border-bottom:1px solid #ccc;padding:10px 0;page-break-inside:avoid;}
+    .print-q .n{font-weight:700;}
+    .print-box{display:inline-block;border:1px solid #333;width:34px;height:18px;margin:0 4px;vertical-align:middle;}
+  }
+  .print-only{display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO -->
+  <section id="screen-intro" class="card">
+    <div class="brand">Manika Goel · Mind Performance Coach</div>
+    <h1>The <span class="accent">Focus Scorecard</span></h1>
+    <p class="sub">A 2-minute check of where your child's focus stands right now — 10 questions, one honest score, and what to do next.</p>
+    <div class="rules">
+      <b>Before you start:</b>
+      <ul>
+        <li>Answer for your child's <b>usual behaviour over the last 30 days</b> — not their best day or their worst day.</li>
+        <li>Be honest. No score is a bad score — it's a starting line.</li>
+        <li>You'll get a score out of 10, what it means, and your first three steps.</li>
+      </ul>
+    </div>
+    <button class="btn" onclick="start()">Start the Scorecard</button>
+    <button class="btn secondary" onclick="window.print()">Print a blank copy</button>
+
+    <!-- printable blank version -->
+    <div class="print-only" id="print-blank"></div>
+  </section>
+
+  <!-- QUESTION -->
+  <section id="screen-q" class="card hidden">
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" id="pfill"></div></div>
+      <div class="progress-label" id="plabel">1 / 13</div>
+    </div>
+    <div class="q-eyebrow" id="qeyebrow">About your child</div>
+    <div class="q-text" id="qtext"></div>
+    <div class="q-help" id="qhelp"></div>
+    <div class="answers" id="answers"></div>
+    <button class="back-link" id="backbtn" onclick="goBack()">← Back</button>
+  </section>
+
+  <!-- RESULT -->
+  <section id="screen-result" class="card hidden">
+    <div class="brand">Your child's focus — today</div>
+    <div class="score-ring" id="ring">
+      <div class="score-num" id="scorenum">0</div>
+      <div class="score-of">out of 10</div>
+    </div>
+    <div class="band" id="bandtitle"></div>
+    <div class="band-body" id="bandbody"></div>
+
+    <div class="section-title">Your first three steps</div>
+    <ul class="next-list" id="nextlist"></ul>
+
+    <div class="parent-note" id="parentnote"></div>
+
+    <div class="divider"></div>
+
+    <div class="cta-box">
+      <h3>Turn this score into a plan</h3>
+      <p>Book a 1:1 call with Manika. Bring your child's score — we'll go through what it means and the exact next steps for your child.</p>
+      <a href="https://topmate.io/manika3110/1756234" target="_blank" rel="noopener">Book a 1:1 call →</a>
+    </div>
+
+    <button class="btn secondary" onclick="window.print()">Save / print my result</button>
+    <button class="btn secondary" onclick="location.reload()">Retake</button>
+    <p class="foot">Your answers stay on this device. Nothing is sent anywhere.</p>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var childQuestions = [
+    {t:"Can your child study without checking or asking for the phone for a reasonable stretch?", h:"A 'reasonable stretch' = roughly 20–30 minutes for their age."},
+    {t:"Do they stay with one task until it's done, without switching to something else?", h:"Switching = opening another tab, another book, another app mid-task."},
+    {t:"Do they get back to studying without repeated reminders from you?", h:"One nudge is fine. Three or four in an hour is not."},
+    {t:"Do they listen fully when someone is explaining something?", h:"Eyes up, following along — not nodding while somewhere else."},
+    {t:"Can they stay focused when there's some noise or activity around them?", h:"A sibling in the room, some kitchen sound — not total silence required."},
+    {t:"Do they finish homework without drifting off several times?", h:"Some drift is normal. Constant drift is the flag."},
+    {t:"Do they remember what they studied a few days later?", h:"Not word-for-word — but the main ideas hold."},
+    {t:"Do they stay calm when a topic is hard, instead of shutting down or giving up?", h:"Frustration is fine. Melting down or quitting is the pattern to notice."},
+    {t:"Do they plan their study time, even loosely, on their own?", h:"'I'll do maths first, then history' — some structure, unprompted."},
+    {t:"Can they sit with something boring for a few minutes for a payoff later?", h:"Delaying a reward — finish the revision, then the game."}
+  ];
+
+  var parentQuestions = [
+    {t:"In the last week, how often did you check your phone while your child was mid-homework or mid-conversation near you?", opts:["Often","Sometimes","Rarely"]},
+    {t:"How often were you visibly rushed or stressed during after-school / study time?", opts:["Often","Sometimes","Rarely"]},
+    {t:'How often did "just focus" come out without explaining what was actually going on?', opts:["Often","Sometimes","Rarely"]}
+  ];
+
+  var TOTAL = childQuestions.length + parentQuestions.length; // 13
+  var idx = 0;
+  var childScore = 0;
+  var childAnswers = [];
+  var parentAnswers = [];
+
+  var el = function(id){ return document.getElementById(id); };
+
+  window.start = function(){
+    el('screen-intro').classList.add('hidden');
+    el('screen-q').classList.remove('hidden');
+    idx = 0; childScore = 0; childAnswers = []; parentAnswers = [];
+    render();
+  };
+
+  function render(){
+    var pct = Math.round((idx / TOTAL) * 100);
+    el('pfill').style.width = pct + "%";
+    el('plabel').textContent = (idx + 1) + " / " + TOTAL;
+    el('backbtn').style.visibility = idx === 0 ? "hidden" : "visible";
+
+    var answers = el('answers');
+    answers.innerHTML = "";
+
+    if (idx < childQuestions.length){
+      var q = childQuestions[idx];
+      el('qeyebrow').textContent = "About your child  ·  question " + (idx + 1) + " of 10";
+      el('qtext').textContent = q.t;
+      el('qhelp').textContent = q.h;
+      answers.className = "answers";
+      makeBtn(answers, "Yes", function(){ answer(true); });
+      makeBtn(answers, "Not really", function(){ answer(false); });
+    } else {
+      var pi = idx - childQuestions.length;
+      var pq = parentQuestions[pi];
+      el('qeyebrow').textContent = "A quick check on you  ·  " + (pi + 1) + " of 3";
+      el('qtext').textContent = pq.t;
+      el('qhelp').textContent = "Answer honestly — this part is just for your own reflection.";
+      answers.className = "answers three";
+      pq.opts.forEach(function(o){
+        makeBtn(answers, o, function(){ parentAnswer(o); });
+      });
+    }
+  }
+
+  function makeBtn(parent, label, fn){
+    var b = document.createElement("button");
+    b.className = "ans";
+    b.textContent = label;
+    b.onclick = fn;
+    parent.appendChild(b);
+  }
+
+  function answer(isYes){
+    childAnswers[idx] = isYes;
+    idx++;
+    step();
+  }
+  function parentAnswer(val){
+    parentAnswers[idx - childQuestions.length] = val;
+    idx++;
+    step();
+  }
+  function step(){
+    if (idx >= TOTAL){ showResult(); }
+    else { render(); }
+  }
+
+  window.goBack = function(){
+    if (idx > 0){ idx--; render(); }
+  };
+
+  function showResult(){
+    childScore = childAnswers.reduce(function(s,a){ return s + (a ? 1 : 0); }, 0);
+
+    el('screen-q').classList.add('hidden');
+    el('screen-result').classList.remove('hidden');
+    window.scrollTo(0,0);
+
+    el('scorenum').textContent = childScore;
+
+    var band, color, body, steps;
+    if (childScore >= 8){
+      band = "Strong foundation";
+      color = getComputedStyle(document.documentElement).getPropertyValue('--good');
+      body = "Your child's focus is in good shape. The work now is sharpening it — protecting it from slipping as school pressure grows, and adding memory and recall on top.";
+      steps = [
+        "Keep the current routine — don't change what's working.",
+        "Add a short daily memory technique so recall keeps pace with focus.",
+        "Watch the 1–2 questions you answered 'not really' — that's your growth edge."
+      ];
+    } else if (childScore >= 5){
+      band = "Real gaps — very fixable";
+      color = getComputedStyle(document.documentElement).getPropertyValue('--mid');
+      body = "There are clear gaps here, and they are the kind that respond quickly to the right training. Your child isn't behind — their attention system just hasn't been trained yet.";
+      steps = [
+        "Phone in another room during study time — not face down on the table.",
+        'Swap "just focus" for one specific instruction: "read this section, then tell me the main point."',
+        "Start 10–15 minutes a day of deliberate focus practice, done with your child."
+      ];
+    } else {
+      band = "This is exactly why you're here";
+      color = getComputedStyle(document.documentElement).getPropertyValue('--low');
+      body = "A low score is not a verdict on your child. It means the focus muscle is untrained — and untrained is the most trainable state there is. Almost every strong focus score started here.";
+      steps = [
+        "Don't add more pressure or more tuition — it won't reach the real problem.",
+        "Fix the environment first: phone out of the room, one fixed study spot, notifications off.",
+        "Begin short daily focus reps — small and consistent beats long and heroic."
+      ];
+    }
+    el('ring').style.borderColor = color.trim();
+    el('scorenum').style.color = color.trim();
+    el('bandtitle').textContent = band;
+    el('bandtitle').style.color = color.trim();
+    el('bandbody').textContent = body;
+
+    var ul = el('nextlist');
+    ul.innerHTML = "";
+    steps.forEach(function(s){
+      var li = document.createElement("li");
+      li.textContent = s;
+      ul.appendChild(li);
+    });
+
+    // parent reflection
+    var oftenCount = parentAnswers.filter(function(a){ return a === "Often"; }).length;
+    var pn = el('parentnote');
+    if (oftenCount >= 2){
+      pn.innerHTML = "<b>One more thing.</b> You answered \"often\" on two or more of the questions about you. That's not blame — a child's focus borrows heavily from the adults around them. Your own phone habits and stress level during study time are one of the fastest levers you have, and the one you fully control.";
+    } else if (oftenCount === 1){
+      pn.innerHTML = "<b>One more thing.</b> There's one habit on your side worth tightening during study time — small changes there tend to move a child's focus faster than anything you ask of the child.";
+    } else {
+      pn.innerHTML = "<b>Your side looks solid.</b> You're already modelling focus and staying calm during study time. Keep that — it's doing more than you think.";
+    }
+  }
+
+  // build printable blank version
+  (function buildPrint(){
+    var host = document.getElementById('print-blank');
+    if (!host) return;
+    var h = '<h2 style="font-family:Fraunces,Georgia,serif;margin:20px 0 6px;">The Focus Scorecard</h2>';
+    h += '<p style="font-size:13px;color:#555;margin-bottom:14px;">Answer for your child\'s usual behaviour over the last 30 days. Tick YES or NO. Score = number of YES answers.</p>';
+    childQuestions.forEach(function(q,i){
+      h += '<div class="print-q"><span class="n">'+(i+1)+'.</span> '+q.t+
+           ' &nbsp; YES<span class="print-box"></span> NO<span class="print-box"></span></div>';
+    });
+    h += '<p style="margin-top:16px;font-weight:700;">Total score: ______ / 10</p>';
+    h += '<p style="font-size:13px;color:#555;margin-top:6px;">8–10 strong · 5–7 real gaps, fixable · below 5 untrained, very trainable</p>';
+    host.innerHTML = h;
+  })();
+
+})();
+</script>
+</body>
+</html>
