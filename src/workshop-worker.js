@@ -57,6 +57,37 @@ export default {
         return Response.redirect(new URL("/admin", url), 302);
       }
 
+      if (url.pathname === "/admin/toggle-excluded" && request.method === "POST") {
+        const form = await request.formData();
+        const id = form.get("id");
+        const raw = await env.WORKSHOP_LEADS.get(id);
+        if (raw) {
+          const lead = JSON.parse(raw);
+          lead.excluded = !lead.excluded;
+          await env.WORKSHOP_LEADS.put(id, JSON.stringify(lead));
+        }
+        return Response.redirect(new URL("/admin", url), 302);
+      }
+
+      if (url.pathname === "/admin/send-unjoined" && request.method === "POST") {
+        const leads = await getAllLeads(env);
+        const targets = leads.filter((l) => !l.groupJoined && !l.excluded);
+        let sent = 0;
+        for (const lead of targets) {
+          try {
+            await sendAiSensyReminder(env, lead);
+            await env.WORKSHOP_LEADS.put(
+              lead.id,
+              JSON.stringify({ ...lead, manualReminderSentAt: new Date().toISOString() })
+            );
+            sent++;
+          } catch (err) {
+            console.error(`Manual resend failed for ${lead.id}:`, err);
+          }
+        }
+        return Response.redirect(new URL(`/admin?sent=${sent}`, url), 302);
+      }
+
       const leads = await getAllLeads(env);
 
       if (url.pathname === "/admin/export.csv") {
@@ -68,7 +99,8 @@ export default {
         });
       }
 
-      return new Response(renderAdminPage(leads), {
+      const sentCount = url.searchParams.get("sent");
+      return new Response(renderAdminPage(leads, sentCount), {
         headers: { "Content-Type": "text/html" },
       });
     }
@@ -168,19 +200,22 @@ function fmtIst(iso) {
 }
 
 function toCsv(leads) {
-  const header = ["Name", "Phone", "Email", "Registered On (IST)", "WhatsApp Group Joined", "24h Reminder Sent"];
+  const header = ["Name", "Phone", "Email", "Registered On (IST)", "WhatsApp Group Joined", "Excluded (test/duplicate)", "Reminder Sent"];
   const rows = leads.map((l) => [
-    l.name, l.phone, l.email, fmtIst(l.submittedAt), l.groupJoined ? "Yes" : "No", l.reminderSent ? "Yes" : "No",
+    l.name, l.phone, l.email, fmtIst(l.submittedAt), l.groupJoined ? "Yes" : "No",
+    l.excluded ? "Yes" : "No", (l.reminderSent || l.manualReminderSentAt) ? "Yes" : "No",
   ]);
   const escCsv = (v) => `"${(v || "").toString().replace(/"/g, '""')}"`;
   return [header, ...rows].map((r) => r.map(escCsv).join(",")).join("\r\n");
 }
 
-function renderAdminPage(leads) {
+function renderAdminPage(leads, sentCount) {
   const total = leads.length;
-  const joined = leads.filter((l) => l.groupJoined).length;
+  const active = leads.filter((l) => !l.excluded);
+  const joined = active.filter((l) => l.groupJoined).length;
+  const notJoined = active.filter((l) => !l.groupJoined);
   const rows = leads.map((l) => `
-    <tr>
+    <tr style="${l.excluded ? "opacity:.5;" : ""}">
       <td>${esc(l.name)}</td>
       <td>${esc(l.phone)}</td>
       <td>${esc(l.email)}</td>
@@ -194,9 +229,17 @@ function renderAdminPage(leads) {
         </form>
       </td>
       <td style="text-align:center;">
-        <span class="pill ${l.reminderSent ? "yes" : "no"}" style="cursor:default;">
-          ${l.reminderSent ? "✓ Sent" : "—"}
+        <span class="pill ${(l.reminderSent || l.manualReminderSentAt) ? "yes" : "no"}" style="cursor:default;">
+          ${(l.reminderSent || l.manualReminderSentAt) ? "✓ Sent" : "—"}
         </span>
+      </td>
+      <td style="text-align:center;">
+        <form method="POST" action="/admin/toggle-excluded" style="margin:0;">
+          <input type="hidden" name="id" value="${esc(l.id)}">
+          <button type="submit" class="pill ${l.excluded ? "no" : "yes"}">
+            ${l.excluded ? "Excluded" : "Real Lead"}
+          </button>
+        </form>
       </td>
     </tr>`).join("");
 
@@ -211,8 +254,11 @@ function renderAdminPage(leads) {
   .stats{display:flex;gap:18px;margin:14px 0 20px;flex-wrap:wrap;}
   .stat{background:#fff;border:1px solid #E7DCC9;border-radius:12px;padding:12px 18px;}
   .stat b{display:block;font-size:20px;}
-  .actions{margin-bottom:16px;}
+  .actions{margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
   .actions a{background:#2B2118;color:#fff;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:14px;}
+  .btn-send{background:#C1573F;color:#fff;border:none;padding:9px 16px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .btn-send:disabled{background:#ccc;cursor:not-allowed;}
+  .banner{background:#E8F7EE;border:1px solid #25D366;color:#175c33;padding:10px 14px;border-radius:10px;margin-bottom:14px;font-size:14px;}
   table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;font-size:13.5px;}
   th,td{padding:10px 12px;border-bottom:1px solid #E7DCC9;text-align:left;}
   th{background:#2B2118;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
@@ -225,14 +271,24 @@ function renderAdminPage(leads) {
 </style></head>
 <body><div class="wrap">
   <h1>Workshop Registrations</h1>
+  ${sentCount !== null && sentCount !== undefined ? `<div class="banner">✓ Reminder sent to ${esc(sentCount)} ${sentCount == 1 ? "person" : "people"} who hadn't joined yet.</div>` : ""}
   <div class="stats">
-    <div class="stat"><b>${total}</b>Total registrations</div>
+    <div class="stat"><b>${total}</b>Total entries (incl. excluded)</div>
+    <div class="stat"><b>${active.length}</b>Real leads</div>
     <div class="stat"><b>${joined}</b>Joined WhatsApp group</div>
-    <div class="stat"><b>${total - joined}</b>Not yet joined</div>
+    <div class="stat"><b>${notJoined.length}</b>Not yet joined</div>
   </div>
-  <div class="actions"><a href="/admin/export.csv">Download CSV</a></div>
+  <div class="actions">
+    <a href="/admin/export.csv">Download CSV</a>
+    <form method="POST" action="/admin/send-unjoined" style="display:inline;margin:0;"
+      onsubmit="return confirm('Send the join reminder to ${notJoined.length} ${notJoined.length === 1 ? "person" : "people"} who haven\\'t joined the group yet?');">
+      <button type="submit" class="btn-send" ${notJoined.length === 0 ? "disabled" : ""}>
+        Send Reminder to ${notJoined.length} Not-Joined Now
+      </button>
+    </form>
+  </div>
   <table>
-    <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Registered</th><th>WhatsApp Group</th><th>24h Reminder</th></tr></thead>
+    <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Registered</th><th>WhatsApp Group</th><th>Reminder</th><th>Lead Status</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>
 </div></body></html>`;
