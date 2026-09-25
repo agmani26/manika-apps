@@ -75,7 +75,60 @@ export default {
 
     return env.ASSETS.fetch(request);
   },
+
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(sendDueReminders(env));
+  },
 };
+
+const REMINDER_DELAY_MS = 24 * 60 * 60 * 1000;
+
+async function sendDueReminders(env) {
+  const cutoff = env.REMINDER_CUTOFF ? new Date(env.REMINDER_CUTOFF) : null;
+  const leads = await getAllLeads(env);
+  const now = Date.now();
+
+  for (const lead of leads) {
+    if (lead.reminderSent) continue;
+    const registeredAt = new Date(lead.submittedAt);
+    if (cutoff && registeredAt < cutoff) continue;
+    if (now - registeredAt.getTime() < REMINDER_DELAY_MS) continue;
+
+    try {
+      await sendAiSensyReminder(env, lead);
+      await env.WORKSHOP_LEADS.put(
+        lead.id,
+        JSON.stringify({ ...lead, reminderSent: true, reminderSentAt: new Date().toISOString() })
+      );
+    } catch (err) {
+      console.error(`Reminder failed for ${lead.id}:`, err);
+    }
+  }
+}
+
+async function sendAiSensyReminder(env, lead) {
+  const destination = normalizeIndianPhone(lead.phone);
+  const res = await fetch("https://backend.aisensy.com/campaign/t1/api/v2", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      apiKey: env.AISENSY_API_KEY,
+      campaignName: env.WORKSHOP_REMINDER_CAMPAIGN,
+      destination,
+      userName: lead.name,
+      templateParams: [env.WORKSHOP_DATE_LABEL, env.WORKSHOP_JOIN_LINK],
+      source: "workshop-reminder-24h",
+      media: {},
+      buttons: [],
+      carouselCards: [],
+      location: {},
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`AiSensy ${res.status}: ${body}`);
+  }
+}
 
 function checkAdminAuth(request, env) {
   const auth = request.headers.get("Authorization");
@@ -115,9 +168,9 @@ function fmtIst(iso) {
 }
 
 function toCsv(leads) {
-  const header = ["Name", "Phone", "Email", "Registered On (IST)", "WhatsApp Group Joined"];
+  const header = ["Name", "Phone", "Email", "Registered On (IST)", "WhatsApp Group Joined", "24h Reminder Sent"];
   const rows = leads.map((l) => [
-    l.name, l.phone, l.email, fmtIst(l.submittedAt), l.groupJoined ? "Yes" : "No",
+    l.name, l.phone, l.email, fmtIst(l.submittedAt), l.groupJoined ? "Yes" : "No", l.reminderSent ? "Yes" : "No",
   ]);
   const escCsv = (v) => `"${(v || "").toString().replace(/"/g, '""')}"`;
   return [header, ...rows].map((r) => r.map(escCsv).join(",")).join("\r\n");
@@ -139,6 +192,11 @@ function renderAdminPage(leads) {
             ${l.groupJoined ? "✓ Joined" : "Not yet"}
           </button>
         </form>
+      </td>
+      <td style="text-align:center;">
+        <span class="pill ${l.reminderSent ? "yes" : "no"}" style="cursor:default;">
+          ${l.reminderSent ? "✓ Sent" : "—"}
+        </span>
       </td>
     </tr>`).join("");
 
@@ -174,7 +232,7 @@ function renderAdminPage(leads) {
   </div>
   <div class="actions"><a href="/admin/export.csv">Download CSV</a></div>
   <table>
-    <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Registered</th><th>WhatsApp Group</th></tr></thead>
+    <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Registered</th><th>WhatsApp Group</th><th>24h Reminder</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>
 </div></body></html>`;

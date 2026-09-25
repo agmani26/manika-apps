@@ -12,5 +12,22 @@
   ],
   "routes": [
     { "pattern": "workshop.manikagoel.com", "custom_domain": true }
-  ]
+  ],
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
+  "vars": {
+    // Single source of truth for the 24h reminder message. Update these two
+    // whenever the workshop date changes, or when switching from the WhatsApp
+    // Group to the WhatsApp Community link - no code change needed, just
+    // redeploy after editing.
+    "WORKSHOP_DATE_LABEL": "4th October, 11:30 AM IST",
+    "WORKSHOP_JOIN_LINK": "https://chat.whatsapp.com/G4HiDMVgJk2FKrqDK6Vi77",
+    // Must exactly match the AiSensy campaign name wrapping the approved
+    // "workshop reminder" template (2 variables: date, join link).
+    "WORKSHOP_REMINDER_CAMPAIGN": "Workshop Reminder 24h",
+    // Registrations before this moment are excluded from the automated
+    // reminder (they were already handled manually). Do not change this.
+    "REMINDER_CUTOFF": "2026-09-25T08:36:15.000Z"
+  }
 }
