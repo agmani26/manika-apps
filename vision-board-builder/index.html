@@ -29,6 +29,10 @@
   .warmup label{ font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
   .warmup input{ width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;}
 
+  .namefield{ max-width:900px; margin:0 auto 8px; }
+  .namefield label{ font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
+  .namefield input{ width:100%; max-width:340px; padding:9px 12px; border:1px solid var(--line); border-radius:8px; font-size:14px; font-family:inherit; }
+
   .layout{ max-width:1100px; margin:24px auto; display:grid; grid-template-columns: 1.1fr 1fr; gap:20px; align-items:start; }
   @media (max-width:860px){ .layout{ grid-template-columns:1fr; } }
 
@@ -67,6 +71,7 @@
     font-family:inherit; font-size:13px; font-weight:600; padding:10px 20px; border-radius:100px;
     border:none; cursor:pointer;
   }
+  .btn-save{ background:var(--accent); color:#fff; }
   .btn-print{ background:var(--ink); color:#fff; }
   .btn-reset{ background:#fff; color:var(--muted); border:1px solid var(--line); }
 
@@ -86,6 +91,11 @@
   <h1>Vision Board Builder</h1>
   <p>Fill in each box together, live in your session. Watch your board build itself on the right as you go — then print it out at the end.</p>
 </header>
+
+<div class="namefield">
+  <label>Child's name (shown on the board, saved with it)</label>
+  <input type="text" id="child-name" placeholder="e.g. First name is fine">
+</div>
 
 <div class="warmup">
   <h2>Warm-up first — the 3-Circle Exercise</h2>
@@ -110,9 +120,11 @@
 </div>
 
 <div class="actions">
+  <button class="btn-save" id="save-btn" onclick="saveToServer()">Save My Board</button>
   <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
   <button class="btn-reset" onclick="if(confirm('Clear everything and start fresh?')) resetAll()">Start Over</button>
 </div>
+<p id="save-status" style="text-align:center;font-size:12.5px;color:var(--muted);min-height:18px;"></p>
 
 <script>
   const CATS = [
@@ -147,6 +159,9 @@
   }
 
   function render(){
+    const nameEl = document.getElementById("board-name");
+    const name = loadName();
+    nameEl.textContent = name ? name : "Fill in your name above";
     tilesEl.innerHTML = "";
     CATS.forEach(cat => {
       const what = document.getElementById(`${cat.key}-what`).value.trim();
@@ -170,9 +185,38 @@
   }
 
   function allInputs(){
-    const ids = ["w-want","w-do","w-result"];
+    const ids = ["child-name","w-want","w-do","w-result"];
     CATS.forEach(c => ids.push(`${c.key}-what`, `${c.key}-why`, `${c.key}-action`));
     return ids;
+  }
+
+  async function saveToServer(){
+    const statusEl = document.getElementById("save-status");
+    const btn = document.getElementById("save-btn");
+    const name = document.getElementById("child-name").value.trim();
+    const categories = {};
+    CATS.forEach(cat => {
+      categories[cat.key] = {
+        what: document.getElementById(`${cat.key}-what`).value.trim(),
+        why: document.getElementById(`${cat.key}-why`).value.trim(),
+        action: document.getElementById(`${cat.key}-action`).value.trim(),
+      };
+    });
+
+    btn.disabled = true;
+    statusEl.textContent = "Saving...";
+    try {
+      const res = await fetch("/api/vision-board/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, categories }),
+      });
+      if (!res.ok) throw new Error("Save failed");
+      statusEl.textContent = "Saved ✓";
+    } catch (e) {
+      statusEl.textContent = "Couldn't save right now — you can still print or screenshot the board.";
+    }
+    btn.disabled = false;
   }
 
   function saveAll(){

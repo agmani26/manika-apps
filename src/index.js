@@ -49,6 +49,16 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === "/api/vision-board/save" && request.method === "POST") {
+      return saveVisionBoard(request, env);
+    }
+
+    if (url.pathname.startsWith("/admin/vision-boards")) {
+      const authFail = checkAdminAuth(request, env);
+      if (authFail) return authFail;
+      return handleVisionBoardAdmin(url, env);
+    }
+
     if (!isGated(url.pathname)) {
       return env.ASSETS.fetch(request);
     }
@@ -83,6 +93,147 @@ export default {
     });
   },
 };
+
+function checkAdminAuth(request, env) {
+  const auth = request.headers.get("Authorization");
+  const expected = "Basic " + btoa(`manika:${env.ADMIN_PASSWORD}`);
+  if (!env.ADMIN_PASSWORD || auth !== expected) {
+    return new Response("Authentication required", {
+      status: 401,
+      headers: { "WWW-Authenticate": 'Basic realm="Admin"' },
+    });
+  }
+  return null;
+}
+
+async function saveVisionBoard(request, env) {
+  let data;
+  try {
+    data = await request.json();
+  } catch {
+    return new Response(JSON.stringify({ error: "Invalid request" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const name = (data.name || "").toString().trim();
+  const categories = data.categories && typeof data.categories === "object" ? data.categories : {};
+
+  const id = `${Date.now()}-${crypto.randomUUID()}`;
+  await env.VISION_BOARD_DATA.put(
+    id,
+    JSON.stringify({ name, categories, savedAt: new Date().toISOString() })
+  );
+
+  return new Response(JSON.stringify({ ok: true }), {
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+async function getAllVisionBoards(env) {
+  const list = await env.VISION_BOARD_DATA.list({ limit: 1000 });
+  const boards = await Promise.all(
+    list.keys.map(async (k) => {
+      const raw = await env.VISION_BOARD_DATA.get(k.name);
+      return { id: k.name, ...JSON.parse(raw) };
+    })
+  );
+  boards.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
+  return boards;
+}
+
+function esc(str) {
+  return (str || "").toString().replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+
+function fmtIst(iso) {
+  return new Date(iso).toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata", day: "2-digit", month: "short", year: "numeric",
+    hour: "2-digit", minute: "2-digit", hour12: true,
+  });
+}
+
+const CAT_LABELS = {
+  academics: "Academics",
+  physical: "Physical / Sport",
+  creative: "Creative / Personal Interest",
+  character: "Character Trait",
+  fun: "Just for Fun",
+};
+
+function toCsv(boards) {
+  const header = ["Name", "Saved On (IST)", ...Object.values(CAT_LABELS).flatMap((l) => [`${l} — What`, `${l} — Why`, `${l} — Action`])];
+  const rows = boards.map((b) => {
+    const row = [b.name, fmtIst(b.savedAt)];
+    for (const key of Object.keys(CAT_LABELS)) {
+      const c = b.categories[key] || {};
+      row.push(c.what || "", c.why || "", c.action || "");
+    }
+    return row;
+  });
+  const escCsv = (v) => `"${(v || "").toString().replace(/"/g, '""')}"`;
+  return [header, ...rows].map((r) => r.map(escCsv).join(",")).join("\r\n");
+}
+
+async function handleVisionBoardAdmin(url, env) {
+  const boards = await getAllVisionBoards(env);
+
+  if (url.pathname === "/admin/vision-boards/export.csv") {
+    return new Response(toCsv(boards), {
+      headers: {
+        "Content-Type": "text/csv",
+        "Content-Disposition": `attachment; filename="vision-boards.csv"`,
+      },
+    });
+  }
+
+  const rows = boards.map((b) => `
+    <tr>
+      <td>${esc(b.name || "(no name given)")}</td>
+      <td>${fmtIst(b.savedAt)}</td>
+      <td>${Object.keys(CAT_LABELS).filter((k) => b.categories[k] && b.categories[k].what).length} / 5 filled</td>
+      <td><a href="#" onclick="document.getElementById('detail-${esc(b.id)}').classList.toggle('open');return false;">View</a></td>
+    </tr>
+    <tr class="detail" id="detail-${esc(b.id)}"><td colspan="4">
+      ${Object.entries(CAT_LABELS).map(([key, label]) => {
+        const c = b.categories[key] || {};
+        if (!c.what) return "";
+        return `<div class="cat-block"><strong>${label}:</strong> ${esc(c.what)}${c.why ? ` — <em>${esc(c.why)}</em>` : ""}${c.action ? `<br><span class="action">This week: ${esc(c.action)}</span>` : ""}</div>`;
+      }).join("")}
+    </td></tr>`).join("");
+
+  return new Response(`<!doctype html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Vision Boards — Admin</title>
+<style>
+  body{font-family:system-ui,-apple-system,sans-serif;background:#FAF3E9;color:#2B2118;margin:0;padding:24px 16px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  h1{font-size:22px;margin:0 0 14px;}
+  .actions{margin-bottom:16px;}
+  .actions a{background:#2B2118;color:#fff;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:14px;}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;font-size:13.5px;}
+  th,td{padding:10px 12px;border-bottom:1px solid #E7DCC9;text-align:left;}
+  th{background:#2B2118;color:#fff;font-size:12px;text-transform:uppercase;letter-spacing:.04em;}
+  tr.detail{display:none;background:#FFFDF8;}
+  tr.detail.open{display:table-row;}
+  .cat-block{margin-bottom:8px;font-size:13px;}
+  .action{color:#7A6F5E;font-size:12px;}
+</style></head>
+<body><div class="wrap">
+  <h1>Vision Board Submissions (${boards.length})</h1>
+  <div class="actions"><a href="/admin/vision-boards/export.csv">Download CSV</a></div>
+  <table>
+    <thead><tr><th>Name</th><th>Saved</th><th>Completeness</th><th></th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+</div></body></html>`, {
+    headers: { "Content-Type": "text/html" },
+  });
+}
 
 function gatePage(wrongCode) {
   return `<!doctype html>

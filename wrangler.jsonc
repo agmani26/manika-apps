@@ -18,5 +18,8 @@
   // first clearing those DNS records.
   "routes": [
     { "pattern": "apps.manikagoel.com", "custom_domain": true }
+  ],
+  "kv_namespaces": [
+    { "binding": "VISION_BOARD_DATA", "id": "2fc2432245bf44e882b3c8b1e13a04ca" }
   ]
 }
