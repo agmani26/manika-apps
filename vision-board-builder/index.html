@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vision Board Builder — Being Performer</title>
+<style>
+  :root{
+    --ink:#2B2118; --paper:#FAF3E9; --card:#FFFFFF; --line:#E7DCC9;
+    --accent:#C1573F; --muted:#7A6F5E;
+    --c1:#C1573F; --c2:#2E7D5B; --c3:#2F6690; --c4:#6B4C9A; --c5:#A47C1B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family: system-ui, -apple-system, sans-serif;
+    background:var(--paper); color:var(--ink); margin:0; padding:0 16px 60px;
+  }
+  header{ max-width:1000px; margin:0 auto; text-align:center; padding:28px 0 10px; }
+  header .eyebrow{ font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+  header h1{ font-size:26px; margin:6px 0 4px; }
+  header p{ font-size:14px; color:var(--muted); max-width:560px; margin:0 auto; }
+
+  .warmup{
+    max-width:900px; margin:20px auto; background:var(--card); border:1px solid var(--line);
+    border-radius:16px; padding:18px 20px;
+  }
+  .warmup h2{ font-size:15px; margin:0 0 10px; }
+  .warmup .row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .warmup label{ font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
+  .warmup input{ width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font-size:13px; font-family:inherit;}
+
+  .layout{ max-width:1100px; margin:24px auto; display:grid; grid-template-columns: 1.1fr 1fr; gap:20px; align-items:start; }
+  @media (max-width:860px){ .layout{ grid-template-columns:1fr; } }
+
+  .categories{ display:flex; flex-direction:column; gap:14px; }
+  .cat{
+    background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 18px;
+    border-left:6px solid var(--cat-color);
+  }
+  .cat .head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .cat .head .dot{ width:10px; height:10px; border-radius:50%; background:var(--cat-color); }
+  .cat .head h3{ font-size:14px; margin:0; }
+  .cat textarea, .cat input[type=text]{
+    width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px;
+    font-family:inherit; font-size:13px; margin-bottom:8px; resize:vertical;
+  }
+  .cat .field-label{ font-size:11px; color:var(--muted); margin:0 0 3px; display:block; }
+
+  .board-wrap{ position:sticky; top:16px; }
+  .board{
+    background:#fff; border:1px solid var(--line); border-radius:20px; padding:22px;
+    box-shadow:0 8px 24px rgba(43,33,24,0.06);
+  }
+  .board h2{ text-align:center; font-size:17px; margin:0 0 4px; }
+  .board .name{ text-align:center; font-size:12px; color:var(--muted); margin:0 0 16px; }
+  .tile{
+    border-radius:12px; padding:12px 14px; margin-bottom:10px; color:#fff; min-height:64px;
+  }
+  .tile .cat-name{ font-size:10px; text-transform:uppercase; letter-spacing:.06em; opacity:.85; margin-bottom:4px; }
+  .tile .what{ font-size:14px; font-weight:700; line-height:1.3; }
+  .tile .action{ font-size:11.5px; margin-top:6px; opacity:.95; }
+  .tile.empty{ background:#F1E9DC !important; color:#A79A82; font-style:italic; }
+  .board .brand{ text-align:center; font-size:10px; color:var(--muted); margin-top:14px; letter-spacing:.05em; text-transform:uppercase; }
+
+  .actions{ max-width:1100px; margin:20px auto 0; display:flex; gap:10px; justify-content:center; }
+  button{
+    font-family:inherit; font-size:13px; font-weight:600; padding:10px 20px; border-radius:100px;
+    border:none; cursor:pointer;
+  }
+  .btn-print{ background:var(--ink); color:#fff; }
+  .btn-reset{ background:#fff; color:var(--muted); border:1px solid var(--line); }
+
+  @media print{
+    header, .warmup, .categories, .actions{ display:none; }
+    body{ padding:0; }
+    .layout{ display:block; }
+    .board-wrap{ position:static; }
+    .board{ box-shadow:none; border:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Being Performer · Manika Goel</div>
+  <h1>Vision Board Builder</h1>
+  <p>Fill in each box together, live in your session. Watch your board build itself on the right as you go — then print it out at the end.</p>
+</header>
+
+<div class="warmup">
+  <h2>Warm-up first — the 3-Circle Exercise</h2>
+  <div class="row">
+    <div><label>What I want</label><input type="text" id="w-want" placeholder="e.g. Top the class in Math"></div>
+    <div><label>What I actually do</label><input type="text" id="w-do" placeholder="e.g. Study 20 min, distracted"></div>
+    <div><label>The result I'm getting</label><input type="text" id="w-result" placeholder="e.g. Forget things in the test"></div>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="categories" id="categories"></div>
+
+  <div class="board-wrap">
+    <div class="board">
+      <h2 id="board-title">My Vision Board</h2>
+      <p class="name" id="board-name">Fill in your name below</p>
+      <div id="tiles"></div>
+      <div class="brand">Being Performer — Manika Goel</div>
+    </div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
+  <button class="btn-reset" onclick="if(confirm('Clear everything and start fresh?')) resetAll()">Start Over</button>
+</div>
+
+<script>
+  const CATS = [
+    { key:"academics", label:"Academics", color:"var(--c1)", placeholder:"The subject or skill you want to nail" },
+    { key:"physical", label:"Physical / Sport", color:"var(--c2)", placeholder:"A sport or fitness goal" },
+    { key:"creative", label:"Creative / Personal Interest", color:"var(--c3)", placeholder:"A hobby, craft, or passion project" },
+    { key:"character", label:"Character Trait", color:"var(--c4)", placeholder:"Someone who finishes things / stays calm..." },
+    { key:"fun", label:"Just for Fun", color:"var(--c5)", placeholder:"Something just because it makes you happy" },
+  ];
+
+  const categoriesEl = document.getElementById("categories");
+  const tilesEl = document.getElementById("tiles");
+
+  CATS.forEach(cat => {
+    const div = document.createElement("div");
+    div.className = "cat";
+    div.style.setProperty("--cat-color", cat.color);
+    div.innerHTML = `
+      <div class="head"><span class="dot"></span><h3>${cat.label}</h3></div>
+      <span class="field-label">What it looks like</span>
+      <input type="text" id="${cat.key}-what" placeholder="${cat.placeholder}">
+      <span class="field-label">Why it matters to me</span>
+      <input type="text" id="${cat.key}-why" placeholder="One sentence, in your own words">
+      <span class="field-label">This week's small action</span>
+      <input type="text" id="${cat.key}-action" placeholder="One concrete, doable step">
+    `;
+    categoriesEl.appendChild(div);
+  });
+
+  function loadName(){
+    return document.getElementById("child-name") ? document.getElementById("child-name").value : "";
+  }
+
+  function render(){
+    tilesEl.innerHTML = "";
+    CATS.forEach(cat => {
+      const what = document.getElementById(`${cat.key}-what`).value.trim();
+      const action = document.getElementById(`${cat.key}-action`).value.trim();
+      const tile = document.createElement("div");
+      if (what) {
+        tile.className = "tile";
+        tile.style.background = cat.color;
+        tile.innerHTML = `<div class="cat-name">${cat.label}</div><div class="what">${escapeHtml(what)}</div>${action ? `<div class="action">This week: ${escapeHtml(action)}</div>` : ""}`;
+      } else {
+        tile.className = "tile empty";
+        tile.textContent = `${cat.label} — not filled in yet`;
+      }
+      tilesEl.appendChild(tile);
+    });
+    saveAll();
+  }
+
+  function escapeHtml(str){
+    return str.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+
+  function allInputs(){
+    const ids = ["w-want","w-do","w-result"];
+    CATS.forEach(c => ids.push(`${c.key}-what`, `${c.key}-why`, `${c.key}-action`));
+    return ids;
+  }
+
+  function saveAll(){
+    try {
+      const data = {};
+      allInputs().forEach(id => data[id] = document.getElementById(id).value);
+      localStorage.setItem("visionBoardDraft", JSON.stringify(data));
+    } catch(e) {}
+  }
+
+  function loadAll(){
+    try {
+      const raw = localStorage.getItem("visionBoardDraft");
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      allInputs().forEach(id => { if (data[id] !== undefined) document.getElementById(id).value = data[id]; });
+    } catch(e) {}
+  }
+
+  function resetAll(){
+    allInputs().forEach(id => document.getElementById(id).value = "");
+    try { localStorage.removeItem("visionBoardDraft"); } catch(e) {}
+    render();
+  }
+
+  document.addEventListener("input", (e) => {
+    if (allInputs().includes(e.target.id)) render();
+  });
+
+  loadAll();
+  render();
+</script>
+
+</body>
+</html>
