@@ -245,6 +245,10 @@
     font-family: 'Jakarta', sans-serif; padding: 0;
   }
   .video-frame:hover { border-color: var(--gold); }
+  .video-player { position: relative; overflow: hidden; cursor: pointer; width: 100%; }
+  .video-player img, .video-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .video-player .play-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 78px; height: 78px; transition: transform .2s; }
+  .video-player:hover .play-overlay { transform: translate(-50%, -50%) scale(1.1); }
   .play-btn { width: 62px; height: 62px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-glow); }
   .video-frame span { font-size: 0.88rem; color: var(--text-muted); }
   .lead-form {
@@ -323,6 +327,7 @@
   .footer-col a, .footer-col div { display: block; font-size: 0.92rem; margin-bottom: 10px; color: var(--text-muted); }
   .footer-col a:hover { color: var(--gold); }
   .footer-bottom { margin-top: 24px; font-size: 0.8rem; color: var(--text-muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .footer-legal { max-width: 70ch; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -508,106 +513,18 @@
   </div>
 </section>
 
-<section class="training">
+<section class="training" id="free-training">
   <div class="wrap">
     <div class="training-head reveal">
       <div class="eyebrow">Free Training</div>
       <h2>Watch: How to Train Your Child's Mind for Focus &amp; Memory</h2>
-      <p>A free training video for parents of bright 8-18 year olds — enter your details to watch instantly.</p>
+      <p>A free training video for parents of bright 8-18 year olds. Press play to watch.</p>
     </div>
-    <button type="button" class="video-frame" id="trainingOpen" style="border:1px solid var(--border); cursor:pointer; width:100%;">
-      <div class="play-btn">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#1A1305"><path d="M8 5v14l11-7z"/></svg>
+    <div class="video-frame video-player" id="trainingPlayer" role="button" tabindex="0" aria-label="Play the free training video">
+      <img src="/free-training-thumbnail.jpg" alt="Free Mind Training Module with Manika Goel" loading="lazy" />
+      <div class="play-btn play-overlay">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#1A1305"><path d="M8 5v14l11-7z"/></svg>
       </div>
-      <span id="trainingFrameLabel">Click to unlock the free training</span>
-    </button>
-  </div>
-</section>
-
-<div class="modal-overlay" id="trainingModal">
-  <div class="modal-card">
-    <button type="button" class="modal-close" id="trainingClose" aria-label="Close">&times;</button>
-    <div class="eyebrow">Free Training</div>
-    <h3 style="font-size:1.4rem; margin:10px 0 22px;">Enter your details to watch instantly</h3>
-    <form id="trainingForm">
-      <label for="tr-name">First Name</label>
-      <input type="text" id="tr-name" placeholder="Your first name" required />
-      <label for="tr-email">Email</label>
-      <input type="email" id="tr-email" placeholder="Your best email" required />
-      <button class="btn-gold" type="submit" style="width:100%;justify-content:center;">Watch the Free Training</button>
-    </form>
-    <div class="lead-trust">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="1.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-      Your information is 100% secure. No spam, ever.
-    </div>
-  </div>
-</div>
-
-<section class="testimonials">
-  <div class="wrap">
-    <div class="testimonials-head reveal">
-      <div class="eyebrow">What Parents Say</div>
-      <h2>In their words.</h2>
-    </div>
-    <div class="testi-carousel">
-      <div class="testi-viewport">
-        <div class="testi-track" id="testiTrack">
-          <div class="testi-slide">
-            <div class="testi-card">
-              <div>
-                <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <div class="testi-quote">"The first session itself was transformative — Manika created a mind map for my son on the challenges he was facing and showed us the right direction. The sessions focused on building his confidence with an actionable roadmap, using NLP techniques to shift his daily habits. He feels happier and more confident now."</div>
-              </div>
-              <div class="testi-attr"><strong>Personal Coaching parent</strong> — Trustpilot, Jan 2025</div>
-            </div>
-          </div>
-          <div class="testi-slide">
-            <div class="testi-card">
-              <div>
-                <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <div class="testi-quote">"I enrolled my child in the memory classes and found them extremely helpful — the techniques taught are really worth it. I was looking for something like this for a long time, and I'm so glad I found an excellent trainer in Manika. She is so passionate about her work."</div>
-              </div>
-              <div class="testi-attr"><strong>Sunaina Sharma</strong> — Facebook review</div>
-            </div>
-          </div>
-          <div class="testi-slide">
-            <div class="testi-card">
-              <div>
-                <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <div class="testi-quote">"My 8-year-old son enjoyed the 30-day Super Achiever's Challenge. We opted for a one-on-one session and it was pleasant, interactive, and interesting — he looked forward to every class. The highlight was how the course content was personalised for him based on his DMIT report."</div>
-              </div>
-              <div class="testi-attr"><strong>Veena Venkat</strong> — Trustpilot</div>
-            </div>
-          </div>
-          <div class="testi-slide">
-            <div class="testi-card">
-              <div>
-                <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;</div>
-                <div class="testi-quote">"You taught us how to memorize using the journey method, pegging, and even the musical window technique — we could turn the periodic table into music. The 5-day concentration challenge was incredibly useful. It was fantastic every session, the way you interact with us."</div>
-              </div>
-              <div class="testi-attr"><strong>Ambika Kasbag</strong> — Trustpilot</div>
-            </div>
-          </div>
-          <div class="testi-slide">
-            <div class="testi-card">
-              <div>
-                <div class="testi-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <div class="testi-quote">"My son has ADHD and was facing speech and focus struggles — moody, unmanageable, procrastinating daily. After attending Manika's workshop, I saw real positive change. She explains creatively how the brain actually retains information, and he tried techniques like Pomodoro and the mirror technique with real enthusiasm. Thank you isn't enough for her effort."</div>
-              </div>
-              <div class="testi-attr"><strong>Anshu Malni</strong> — Trustpilot</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="testi-nav">
-        <button class="testi-arrow" id="testiPrev" aria-label="Previous testimonial">&#8592;</button>
-        <div class="testi-dots" id="testiDots"></div>
-        <button class="testi-arrow" id="testiNext" aria-label="Next testimonial">&#8594;</button>
-      </div>
-    </div>
-    <div class="testi-rating">
-      <span class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-      <span><strong>4.8</strong> rating on Trustpilot</span>
     </div>
   </div>
 </section>
@@ -625,17 +542,21 @@
         <a href="#achievements">Achievements</a>
         <a href="#programs">Programs</a>
         <a href="#about">About</a>
+        <a href="/privacy-policy/">Privacy Policy</a>
+        <a href="/terms-and-conditions/">Terms &amp; Conditions</a>
       </div>
       <div class="footer-col">
         <h4>Contact</h4>
         <a href="mailto:info@performersclub.in">info@performersclub.in</a>
         <a href="https://www.linkedin.com/in/manika-goel-94a2b484/" target="_blank" rel="noopener">LinkedIn</a>
-        <div>Instagram &middot; Facebook (add links)</div>
+        <a href="https://www.instagram.com/beingperformer/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.facebook.com/manika.goel.77" target="_blank" rel="noopener">Facebook</a>
         <div>Hyderabad, India</div>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>&copy; 2026 Manika Goel. All rights reserved.</span>
+      <span>&copy; 2026 The Performers&#39; Club. All rights reserved.</span>
+      <span class="footer-legal"><strong>Being Performer</strong> is a unit of <strong>The Performers&#39; Club</strong> (Proprietor: Manika Goel) &middot; D-107, Girdhari Executive Park, D Block, TSPA Junction, Bandlaguda Jagir, Hyderabad, Telangana 500091, India &middot; Udyam Registration No. UDYAM-TS-09-0258188</span>
     </div>
   </div>
 </footer>
@@ -676,25 +597,14 @@
 })();
 
 (function () {
-  var openBtn = document.getElementById('trainingOpen');
-  var modal = document.getElementById('trainingModal');
-  var closeBtn = document.getElementById('trainingClose');
-  var form = document.getElementById('trainingForm');
-  var frameLabel = document.getElementById('trainingFrameLabel');
-
-  function openModal() { modal.classList.add('open'); }
-  function closeModal() { modal.classList.remove('open'); }
-
-  openBtn.addEventListener('click', openModal);
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    closeModal();
-    frameLabel.textContent = "Access granted — your training video will play here once it's uploaded";
-    openBtn.style.cursor = 'default';
-  });
+  var box = document.getElementById('trainingPlayer');
+  function play() {
+    if (box.querySelector('iframe')) return;
+    box.innerHTML = '<iframe src="https://www.youtube.com/embed/9nvzO_fQbw4?autoplay=1&rel=0" title="Free Mind Training Module" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>';
+    box.removeAttribute('role'); box.style.cursor = 'default';
+  }
+  box.addEventListener('click', play);
+  box.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); play(); } });
 })();
 
 (function () {
