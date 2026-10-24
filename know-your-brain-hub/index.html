@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Know Your Brain: 7-Day Challenge</title>
+<style>
+  :root {
+    --bg: #f2f4f1; --surface: #ffffff; --ink: #1c2624; --ink-soft: #5b6864; --ink-faint: #8b9591;
+    --accent: #3e6b5c; --accent-ink: #ffffff; --warm: #c97a35; --warm-soft: #f4e6d6;
+    --line: rgba(28, 38, 36, 0.12); --locked-bg: #eceeec; --field: #f7f8f6; --good: #2f7d5b; --down: #b4572f; --tile: #eef2ef;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141d1a; --surface: #1b2622; --ink: #edefea; --ink-soft: #a9b3ae; --ink-faint: #6d7975;
+      --accent: #74ab97; --accent-ink: #0f1815; --warm: #e3a25e; --warm-soft: #33291d;
+      --line: rgba(237, 239, 234, 0.12); --locked-bg: #202b27; --field: #222e29; --good: #7fcfa5; --down: #e59a73; --tile: #243029;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .page { max-width: 680px; margin: 0 auto; padding: 40px 16px 72px; }
+  .eyebrow { font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 10px; }
+  h1 { font-family: Georgia, "Iowan Old Style", ui-serif, serif; font-size: clamp(1.6rem, 5vw, 2.1rem); font-weight: 400; margin: 0 0 12px; text-wrap: balance; }
+  .lede { color: var(--ink-soft); font-size: .98rem; max-width: 54ch; margin: 0; }
+  .progress { display: flex; align-items: center; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
+  .progress-track { flex: 1; min-width: 140px; height: 6px; border-radius: 3px; background: var(--locked-bg); overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: var(--accent); border-radius: 3px; transition: width .3s; }
+  .progress-label { font-size: .8rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+  .days { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+  .day { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  .day.locked { background: var(--locked-bg); border-color: transparent; }
+  .day-head { width: 100%; display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: none; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+  .day.locked .day-head { cursor: default; }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .day-num { font-size: .78rem; font-weight: 600; color: var(--ink-faint); letter-spacing: .03em; width: 46px; flex-shrink: 0; }
+  .day.available .day-num { color: var(--accent); }
+  .day-icon { font-size: 1.6rem; width: 34px; text-align: center; flex-shrink: 0; }
+  .day-body { flex: 1; min-width: 0; }
+  .day-title { font-size: 1rem; font-weight: 600; margin: 0 0 2px; }
+  .day.locked .day-title { color: var(--ink-faint); }
+  .day-sub { font-size: .84rem; color: var(--ink-soft); margin: 0; }
+  .day.locked .day-sub { color: var(--ink-faint); }
+  .pill { font-size: .72rem; font-weight: 700; padding: 3px 8px; border-radius: 5px; margin-left: 8px; vertical-align: middle; letter-spacing: .03em; text-transform: uppercase; }
+  .pill-today { color: var(--warm); background: var(--warm-soft); }
+  .pill-done { color: var(--good); background: rgba(47, 125, 91, .12); }
+  .lock { font-size: .78rem; color: var(--ink-faint); font-weight: 600; white-space: nowrap; }
+  .day-detail { display: none; padding: 6px 18px 22px; border-top: 1px solid var(--line); }
+  .day.open .day-detail { display: block; }
+
+  h3.sec { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin: 26px 0 10px; display: flex; align-items: center; gap: 8px; }
+  h3.sec .step { background: var(--accent); color: var(--accent-ink); width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: .75rem; }
+  .lesson p { margin: 0 0 12px; font-size: 1rem; }
+  .fact { background: var(--tile); border-radius: 8px; padding: 12px 14px; font-size: .92rem; margin-top: 8px; }
+  .fact b { color: var(--accent); }
+  .parent { background: var(--warm-soft); border-radius: 8px; padding: 12px 14px; font-size: .9rem; margin-top: 22px; }
+  .parent b { color: var(--warm); }
+  .parent p { margin: 0 0 6px; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--accent); color: var(--accent-ink); font: inherit; font-size: .92rem; font-weight: 600; padding: 11px 18px; border-radius: 8px; border: 0; cursor: pointer; margin: 8px 8px 0 0; }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn.big { font-size: 1.05rem; padding: 14px 22px; }
+  .btn[disabled] { opacity: .5; cursor: default; }
+  .btn.wander { background: var(--warm); color: #fff; }
+
+  .widget { border: 1px solid var(--line); border-radius: 10px; padding: 14px; margin: 10px 0; background: var(--field); }
+  .widget h4 { margin: 0 0 6px; font-size: .98rem; }
+  .small { font-size: .86rem; color: var(--ink-soft); }
+  .bigtime { font-family: Georgia, serif; font-size: 3rem; text-align: center; margin: 10px 0; font-variant-numeric: tabular-nums; }
+  .bigword { font-family: Georgia, serif; font-size: 2.6rem; text-align: center; padding: 36px 0; }
+  .dots { text-align: center; color: var(--ink-faint); letter-spacing: 4px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+  .field { display: flex; flex-direction: column; gap: 4px; }
+  .field.wide { grid-column: 1 / -1; }
+  label { font-size: .84rem; color: var(--ink-soft); }
+  input, select, textarea { font: inherit; font-size: 1rem; padding: 9px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); width: 100%; }
+  textarea { min-height: 76px; resize: vertical; }
+  .rate-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; flex-wrap: wrap; }
+  .rate-label { font-size: .92rem; flex: 1 1 200px; }
+  .seg { display: flex; gap: 6px; }
+  .seg-btn { width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+  .seg-btn.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0; }
+  .tile { background: var(--tile); border: 2px solid transparent; border-radius: 10px; text-align: center; padding: 8px 2px; font: inherit; color: var(--ink); }
+  .tile .e { font-size: 1.9rem; line-height: 1.2; display: block; }
+  .tile .n { font-size: .7rem; color: var(--ink-soft); display: block; }
+  button.tile { cursor: pointer; }
+  .tile.sel { border-color: var(--accent); background: var(--surface); }
+  .tile.right { border-color: var(--good); } .tile.wrong { border-color: var(--down); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  .chip { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 20px; padding: 7px 13px; font: inherit; font-size: .88rem; cursor: pointer; }
+  .chip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .result { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; margin-top: 10px; font-size: .94rem; }
+  .result b { color: var(--accent); }
+  table.report, table.cmp { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 6px 0 4px; }
+  table.report th, table.report td, table.cmp th, table.cmp td { text-align: left; padding: 7px 6px; border-bottom: 1px solid var(--line); }
+  table.report th, table.cmp th { font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  .up { color: var(--good); font-weight: 600; } .dn { color: var(--down); font-weight: 600; } .same { color: var(--ink-faint); }
+  .tools { display: flex; flex-wrap: wrap; }
+  footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: .82rem; color: var(--ink-faint); }
+  footer p { margin: 0 0 6px; }
+  @media (max-width: 480px) { .grid { grid-template-columns: 1fr; } .tiles { grid-template-columns: repeat(4, 1fr); } }
+  @media print { .day:not(.report-day), header .progress, footer, .tools, .btn, .no-print { display: none !important; } .report-day { display: block !important; border: 0; } .report-day .day-detail { display: block !important; } body { background: #fff; color: #000; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <p class="eyebrow">7-Day Know Your Brain Challenge</p>
+    <h1>A short lesson, a mission, and real numbers about your own brain. Every day for a week.</h1>
+    <p class="lede">Start tonight with a calm 10-minute activity. After that, do one day at a time: when you finish a day and tap the button at the bottom, the next day opens the following morning. Miss a day and nothing is lost, you simply carry on. Everything happens right here, and the page keeps your numbers. On Day 7 you get your own Brain Report.</p>
+    <div class="progress">
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <span class="progress-label" id="progress-label">Day 0 of 7</span>
+    </div>
+  </header>
+
+  <div class="days" id="days"></div>
+
+  <footer>
+    <p>Your numbers are saved on this phone or computer only, so please open this page on the same device each day.</p>
+    <p>Trouble with the page? Message Manika directly on WhatsApp.</p>
+    <p>Know Your Brain Challenge · Manika Goel, Mind Performance Coach</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  // Manika's WhatsApp number for the "send my report" button (digits only, with country code, e.g. 919876543210).
+  // Leave empty and the parent picks the contact themselves.
+  var WHATSAPP = "";
+
+  var params = new URLSearchParams(location.search);
+  var FAST = params.get("fast") === "1"; // test mode: shortens every timer so Manika can click through quickly
+
+  /* ===================== helpers ===================== */
+  function h(tag, props, kids) {
+    var e = document.createElement(tag);
+    if (props) Object.keys(props).forEach(function (k) {
+      var v = props[k];
+      if (k === "class") e.className = v;
+      else if (k === "text") e.textContent = v;
+      else if (k === "html") e.innerHTML = v; // only ever used with constant strings written in this file
+      else if (k.slice(0, 2) === "on") e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
+    });
+    (kids || []).forEach(function (c) { if (c == null) return; e.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function fmt(s) { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+  function beep() { try { var C = window.AudioContext || window.webkitAudioContext; var c = new C(), o = c.createOscillator(), g = c.createGain(); o.connect(g); g.connect(c.destination); o.frequency.value = 660; g.gain.value = 0.15; o.start(); setTimeout(function () { o.stop(); c.close(); }, 450); } catch (e) {} }
+  function say(text) { try { if (!window.speechSynthesis) return; var u = new SpeechSynthesisUtterance(text); u.lang = "en-IN"; u.rate = 0.9; window.speechSynthesis.speak(u); } catch (e) {} }
+  var canSpeak = !!window.speechSynthesis;
+
+  /* ===================== data ===================== */
+  var DATA_KEY = "knowYourBrainData", COOKIE_KEY = "kybDone";
+  function todayIST() { var now = new Date(); var ist = new Date(now.getTime() + now.getTimezoneOffset() * 60000 + 5.5 * 3600000); return { y: ist.getFullYear(), m: ist.getMonth(), d: ist.getDate() }; }
+  function ds(p) { return p.y + "-" + String(p.m + 1).padStart(2, "0") + "-" + String(p.d).padStart(2, "0"); }
+  function getCookie(n) { var m = document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]*)")); return m ? decodeURIComponent(m[1]) : null; }
+  function setCookie(n, v) { document.cookie = n + "=" + encodeURIComponent(v) + "; Max-Age=" + 60 * 60 * 24 * 180 + "; Path=/; Secure; SameSite=Lax"; }
+
+  if (params.get("reset") === "1") { try { localStorage.removeItem(DATA_KEY); } catch (e) {} document.cookie = COOKIE_KEY + "=; Max-Age=0; Path=/"; }
+  var preview = params.get("preview") === "1"; // for Manika to test: unlocks every day
+  var todayStr = ds(todayIST());
+
+  // Progress-based unlocking, not calendar-based. Day 0 is open for everyone the moment they first open the link,
+  // whatever calendar day that is. Each next day opens on the day AFTER the family marks the previous day as done,
+  // so a family that skips a day just carries on from where they stopped and never loses content.
+  // The "done" dates are also kept in a cookie, because some in-app browsers (WhatsApp, Instagram) lose localStorage.
+  var data = { v: {}, done: {} };
+  try { var raw = localStorage.getItem(DATA_KEY); if (raw) data = JSON.parse(raw); } catch (e) {}
+  data.v = data.v || {}; data.done = data.done || {};
+  if (!Object.keys(data.done).length) { try { var ck = getCookie(COOKIE_KEY); if (ck) data.done = JSON.parse(ck); } catch (e) {} }
+  function save() { try { localStorage.setItem(DATA_KEY, JSON.stringify(data)); } catch (e) {} try { setCookie(COOKIE_KEY, JSON.stringify(data.done)); } catch (e) {} }
+  function isDone(n) { return !!data.done[n]; }
+  function isOpen(n) { if (preview || n === 0) return true; var prev = data.done[n - 1]; return !!prev && prev < todayStr; }
+  function setV(id, val) { data.v[id] = val; save(); refreshReport(); }
+  function num(id) { var x = data.v[id]; return (x === undefined || x === "" || x === null || isNaN(Number(x))) ? null : Number(x); }
+  function txt(id) { return data.v[id] === undefined ? "" : String(data.v[id]); }
+
+  var RATING_KEYS = [["focus", "How well I focus"], ["memory", "How good my memory is"], ["calm", "How calm I stay under pressure"], ["conf", "How confident I feel about studies"]];
+  var LIST_A = ["Mango", "Train", "Pillow", "Scissors", "Rainbow", "Ladder", "Coin", "Elephant", "Window", "Balloon"];
+  var LIST_B = ["Camel", "Lamp", "Bucket", "Spoon", "Rocket", "Carpet", "Drum", "Peacock", "Sock", "Mountain"];
+
+  var TRAYS = {
+    A: { show: [["🥄", "Spoon"], ["🔑", "Key"], ["✏️", "Pencil"], ["🧦", "Socks"], ["📎", "Paper clip"], ["☕", "Cup"], ["🔔", "Bell"], ["🍎", "Apple"], ["🎈", "Balloon"], ["⌚", "Watch"]],
+         extra: [["🍌", "Banana"], ["🎩", "Hat"], ["🔨", "Hammer"], ["🕯️", "Candle"], ["🧲", "Magnet"], ["📷", "Camera"], ["🎸", "Guitar"], ["🔒", "Lock"], ["🍩", "Doughnut"], ["✂️", "Scissors"]] },
+    B: { show: [["📚", "Book"], ["🔦", "Torch"], ["🍋", "Lemon"], ["🧶", "Wool"], ["🧩", "Puzzle piece"], ["🎲", "Dice"], ["🧹", "Broom"], ["🍪", "Biscuit"], ["🔭", "Telescope"], ["🧢", "Cap"]],
+         extra: [["🥕", "Carrot"], ["🧸", "Teddy"], ["🎧", "Headphones"], ["📦", "Box"], ["🧂", "Salt"], ["🎁", "Gift"], ["🔋", "Battery"], ["💡", "Bulb"], ["🧴", "Bottle"], ["🥁", "Drum"]] }
+  };
+
+  /* ===================== lessons ===================== */
+  var LESSONS = {
+    0: { icon: "🌙", title: "Tonight: Welcome, brain scientist", sub: "A calm 10-minute activity before bed",
+      paras: [
+        "Hello, and welcome. Over the next seven days, you are going to do something a little different. You are not going to learn tricks yet, and you are not going to be tested. You are going to find out how your own brain works, by watching it, measuring it, and keeping a record of what you find.",
+        "Think of yourself as a scientist, and think of your brain as the most interesting thing you will ever study. Each day you will read a short lesson and do one mission that takes about ten minutes, and this page will keep all your numbers safe. There are no marks this week, and there are no wrong answers.",
+        "Today is Day 0, and it is a very calm one. Your mission is to do something before bed, and it has three small parts. First, you will replay your whole day in your head, and tell it to a parent in order. Second, you will write three questions you would like to know about your brain. Third, you will get your brain ready for a good night's sleep.",
+        "Sleep matters more than most people think. While you sleep, your brain sorts through what you learned during the day, and keeps the important parts. A brain that has slept well is a brain that can focus and remember much better the next morning."
+      ],
+      fact: "This challenge moves at your pace. When you finish a day and tap Mark as done, the next day opens the following morning. If you miss a day, nothing is lost, and you simply carry on where you stopped.",
+      parentTitle: "Your job this week",
+      parent: ["Your job is to watch and to ask, not to fix. Please do not coach, correct, or compare your child with anyone else. If your child tells you something about their brain, just listen.", "Tonight, be the listener for the Day Replay. Count each separate thing your child mentions, and tap the plus button once for each one. Keep it relaxed, because it is bedtime."],
+      mission: function (n) { return [replayWidget(n), questionsWidget(), setupWidget()]; } },
+
+    1: { icon: "🪞", title: "The Mirror", sub: "How well do I know my brain?",
+      paras: [
+        "If someone asked you to describe your brain in one sentence, what would you say? Most people say, \"It's smart,\" or, \"It forgets things.\" Very few people have ever looked closely at their own brain, the way they would look at a bicycle or a phone they use every day.",
+        "Here is a small picture of it. Hold up one hand and make a fist, with your thumb tucked inside. That fist is a model of your brain. The wrist is the part that keeps you breathing without you ever thinking about it. The tucked thumb is the part that feels things, like happy, angry, worried and excited. And the fingers folded over the top are your thinking brain, the part that plans, remembers and decides to sit down and study.",
+        "When you are very stressed or upset, the fingers lift up, just like this. The thinking brain steps away for a moment, and the feeling brain takes over. That is why it is so hard to remember an answer when you are scared. Your brain is not broken. The fingers have simply lifted, and later in the course you will learn how to bring them back down.",
+        "Today's mission is called The Mirror. You will rate yourself on four things, and your parent will rate you on the same four things, separately. Then you will put the numbers side by side. Where they match, you see yourself the way others do. Where they do not match, that is the most useful thing you will find all week."
+      ],
+      fact: "Did you know? Your brain has about 86 billion nerve cells, and it keeps changing shape for your whole life.",
+      parentTitle: "Your part today",
+      parent: ["Wait until your child has finished all four ratings, and then take your turn privately, without looking at their numbers first.", "Then ask: \"Where are our numbers the same, where are they different, and what would you like to be better at by Day 7?\" Do not argue with your child's number."],
+      mission: function (n) { return [mirrorWidget(n, true)]; } },
+
+    2: { icon: "⏱️", title: "The Focus Stretch", sub: "How long can I really focus?",
+      paras: [
+        "In the last lesson you looked at how you see yourself. Today we are going to measure something real. How long can you focus on one thing before your mind wanders?",
+        "First, make a guess. Everybody guesses a number, and almost everybody guesses too high, so do not worry about it.",
+        "Here is something you should know before you start. Every brain wanders. Yours does, your teacher's does, and the best students in the world have minds that drift. Mind wandering is completely normal. What makes the difference is not whether your mind wanders. It is whether you notice, and how quickly you bring it back.",
+        "In this mission you will work on one small study task for fifteen minutes. Each time you catch your mind wandering, you tap the orange button. You do not stop. You tap, and you come back. Your parent will sit quietly nearby and tap their own button whenever they see you drift.",
+        "At the end, you will compare the two counts. If your parent counted more than you, it means your mind wanders sometimes without you noticing, and noticing is the first skill of focus. Whatever your numbers are today, they are only your starting line."
+      ],
+      fact: "Pick something you need to do anyway: one page to read, or five maths questions. You will repeat this exact mission on Day 7.",
+      parentTitle: "Your part today",
+      parent: ["Sit nearby and say nothing at all. Tap the button each time you see your child's attention leave the task: looking away, fidgeting, stopping, or asking an unrelated question.", "Afterwards, do not comment on the numbers. Just say, \"Thank you for showing me.\""],
+      mission: function (n) { return [guessInput(n), focusWidget(n, true)]; } },
+
+    3: { icon: "🌱", title: "The Other Hand", sub: "Your brain can change",
+      paras: [
+        "Here is a true story. In London, taxi drivers have to memorise thousands of streets before they are allowed to drive. Scientists looked at the brains of these drivers and found that the part used for memory and finding the way was bigger than in other people. The longer someone had been driving, the bigger it was.",
+        "In another study, adults who had never juggled learned to juggle over a few weeks. Scientists scanned their brains before and after, and found that the parts that handle movement and vision had changed.",
+        "What does this tell us? Your brain is not fixed. It changes in a real, physical way when you practise something. Scientists call this neuroplasticity, and the idea is simple.",
+        "Think of a field of tall grass. The first time you walk across it, you can hardly see where you went. But if you walk the same way every day, you slowly make a path, and soon it is easy to follow. Your brain works the same way. Each time you practise, the path gets a little clearer.",
+        "Today you will see this with your own eyes. Take a pencil in the hand you do not normally write with, and write your full name three times, slowly. The letters will look messy. That is perfect, because that is your brain before the path exists."
+      ],
+      fact: "Keep today's page safe. You will do the same thing for two minutes each day, and on Day 7 you will put today's page next to the last one.",
+      parentTitle: "Your part today",
+      parent: ["Some children get frustrated, and that is normal. Say only, \"That's your brain before the path exists.\"", "Keep the paper somewhere safe, because you will need it on Day 7."],
+      mission: function (n) { return [handWidget(n, "Write your full name 3 times with your other hand. Tap Start, write slowly, and tap Stop when you finish.")]; } },
+
+    4: { icon: "🚪", title: "The Tray Test", sub: "Attention is the front door",
+      paras: [
+        "Today we look at where memory starts, and it starts earlier than most people think. Before your brain can remember something, it has to take it in. That first step is called attention, and I like to think of it as the front door of memory. If the door is closed, nothing gets inside, no matter how many times you read it later.",
+        "Your brain takes things in through your senses: what you see, hear, touch, smell and taste. And it only keeps what it pays attention to. That is why you can read a whole page and then realise you cannot remember a single line. Your eyes were there, but your attention was somewhere else.",
+        "In today's test you will see ten everyday things for twenty seconds, and then pick out what you remember. In round one you will just look. In round two you will look on purpose. For each thing, ask yourself three questions: what colour is it, what shape is it, and where is it on the screen? And say its name quietly.",
+        "Same time, same memory, and a very different result. What changes is not your memory. What changes is how much attention you give."
+      ],
+      fact: "One more thing for tonight: set up your study place for Day 7. Put your phone in another room, clear the desk of everything except what you need, and keep a glass of water next to you.",
+      parentTitle: "Your part today",
+      parent: ["Let your child do both rounds on their own. If round two is not higher, ask, \"What was different about how you looked this time?\"", "Tonight, help set up the study place: phone in another room, clear desk, water."],
+      mission: function (n) { return [trayWidget(), handWidget(n, "Daily 2 minutes: write your full name 3 times with your other hand.", true)]; } },
+
+    5: { icon: "🫥", title: "The Forgetting Test", sub: "Why do I forget?",
+      paras: [
+        "Today we talk about something that makes almost every student feel bad: forgetting. You study a lesson in the evening, you feel that you know it, and two days later a lot of it has gone.",
+        "I want you to know something that should make you feel better. Forgetting is not a sign that you are lazy, or that you have a weak memory. It is how every brain works. Your brain is constantly deciding what is worth keeping, and unless you give it a reason to keep something, a lot of it fades within the first day.",
+        "So today you are going to see this happen in your own brain. The page will show you ten words, one at a time. Then you will type the ones you remember. You will also answer one honest question: what did you do, inside your head, to try to remember? Did you picture them, repeat them, or do nothing special?",
+        "Then comes the important part. Please do not write the words down and do not look at them again. Tomorrow morning, before anything else, the page will ask you for the words you still remember, and we will see how many stayed overnight."
+      ],
+      fact: "Whatever your score is, it is not good or bad. It is your brain's natural setting, and tomorrow you will learn how to change it.",
+      parentTitle: "Your part today",
+      parent: ["Be quiet while your child studies the words. The page will do the reading, so you do not need to say anything.", "Notice what your child says their head did (picture, repeat, nothing), and remind them gently about tomorrow morning."],
+      mission: function (n) { return [wordTestWidget({ key: "A", words: LIST_A, scoreId: "d5_a1", strategyId: "d5_strategy", story: false }), handWidget(n, "Daily 2 minutes: write your full name 3 times with your other hand.", true)]; } },
+
+    6: { icon: "📖", title: "The Story Test", sub: "Making memory stick",
+      paras: [
+        "First, before you read any more, do the Morning Check below: type the words from yesterday without looking at anything. Many people find that they remember fewer words today. That is exactly what we expected, and it does not mean that anything is wrong with you. Your brain let go of what it did not have a reason to keep.",
+        "Today I am going to show you one way to give your brain a reason. It is called the story method. Your brain finds it hard to remember a list of separate words, but it finds it very easy to remember a story, especially a silly one that you can see in your head.",
+        "Let me show you with five words: cow, key, ocean, shoe, clock. Imagine a cow walking along, holding a giant key. The cow uses the key to open the ocean, like a door. Out of the ocean jumps a shoe, and the shoe is wearing a clock on its tongue. It is quite silly, and that is exactly why it works. Now try to say the five words back. Most people can do it, even tomorrow.",
+        "Now it is your turn. The page will show you a new list of ten words, one at a time. Then you will get two minutes to link all ten words into one story, as strange and as colourful as you can make it. Then you will type what you remember. Tomorrow morning there is one more check, to see whether the story helps the words last the night."
+      ],
+      fact: "The sillier and more colourful the picture, the better it works. Add sounds, smells and movement if you can.",
+      parentTitle: "Your part today",
+      parent: ["Do not help with the story. Let your child make it up, even if it makes no sense to you.", "Ask them to tell you the story afterwards. Excitement is a sign that attention is switched on, and attention is the front door of memory."],
+      mission: function (n) {
+        return [recallWidget({ title: "Morning Check: the words from yesterday (List A)", words: LIST_A, scoreId: "d6_a24", sinceId: "d5_a1_t", hint: "Type every word you can remember from yesterday. Do not look at anything." }),
+                wordTestWidget({ key: "B", words: LIST_B, scoreId: "d6_b1", story: true }),
+                handWidget(n, "Daily 2 minutes: write your full name 3 times with your other hand.", true)]; } },
+
+    7: { icon: "📊", title: "My Brain Report", sub: "See what changed", report: true,
+      paras: [
+        "Welcome to the last day. Before anything else, do the Morning Check below: type the words from yesterday's story list, without looking at anything.",
+        "Today you are the scientist who reads the results. Over this week you collected numbers about your own brain, and today you will put them side by side.",
+        "You will do six small things. First, the Morning Check. Second, the Mirror again, with the same four ratings. Third, the Focus Stretch again, but this time with the setup from Day 4: phone in another room, a clear desk, and a glass of water. Fourth, the Other Hand again, to put next to your page from Day 3. Fifth, the Day Replay again, just like the first night. And sixth, a look back at the three questions you asked on Day 0, to see what you found out.",
+        "You can spread these across the day. The Morning Check goes first, and the Day Replay is best done in the evening. Then scroll down to your Brain Report. It will show you everything in one place, and it will show you your sharpest day and your foggiest day from your Brain Diary. Please write three things you learned about your brain, and ask your parent to write three things they noticed about you.",
+        "Here is what I want you to remember from this week. You do not have a good brain or a bad brain. You have a brain that responds to what you give it, and now you have the numbers to show it."
+      ],
+      fact: "Next week we begin to build real memory techniques on top of what you discovered this week.",
+      parentTitle: "Your part today",
+      parent: ["Some numbers will go up, some will stay the same, and one or two may even drop. All of it is useful. The real result is that your child now watches their own brain.", "Sit down together with the report and ask, \"What surprised you the most?\""],
+      mission: function (n) {
+        return [recallWidget({ title: "Morning Check: the words from yesterday (List B, the story list)", words: LIST_B, scoreId: "d7_b24", sinceId: "d6_b1_t", hint: "Type every word you can remember from yesterday's story list. Do not look at anything." }),
+                mirrorWidget(n, false),
+                guessNote(),
+                focusWidget(n, false),
+                handWidget(n, "Write your full name 3 times with your other hand, one last time."),
+                replayWidget(n),
+                questionsReviewWidget()]; } }
+  };
+
+  /* ===================== widgets ===================== */
+  function seg(onPick, current) {
+    var wrap = h("div", { class: "seg" });
+    function paint(v) { Array.prototype.forEach.call(wrap.children, function (b) { b.classList.toggle("on", Number(b.dataset.n) === v); }); }
+    for (var n = 1; n <= 5; n++) (function (n) {
+      wrap.appendChild(h("button", { type: "button", class: "seg-btn", text: String(n), "data-n": String(n), onclick: function () { paint(n); onPick(n); } }));
+    })(n);
+    paint(current);
+    return wrap;
+  }
+
+  function mirrorWidget(day, withTalk) {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "The Mirror" }));
+    w.appendChild(h("p", { class: "small", text: "Rate each from 1 (very low) to 5 (very strong). Be honest, because there are no marks." }));
+    var cBlock = h("div"), pBlock = h("div", { style: "display:none" }), cmp = h("div");
+    cBlock.appendChild(h("p", { class: "small", html: "<b>Child's turn</b>" }));
+    RATING_KEYS.forEach(function (k) {
+      var id = "d" + day + "_c_" + k[0];
+      cBlock.appendChild(h("div", { class: "rate-row" }, [h("div", { class: "rate-label", text: k[1] }), seg(function (n) { setV(id, n); update(); }, num(id))]));
+    });
+    var pBtn = h("button", { type: "button", class: "btn ghost", text: "Parent's turn (child, please look away)", onclick: function () { pBlock.style.display = "block"; pBtn.style.display = "none"; } });
+    pBlock.appendChild(h("p", { class: "small", html: "<b>Parent's turn:</b> rate your child on the same four things, without looking at their numbers." }));
+    RATING_KEYS.forEach(function (k) {
+      var id = "d" + day + "_p_" + k[0];
+      pBlock.appendChild(h("div", { class: "rate-row" }, [h("div", { class: "rate-label", text: k[1] }), seg(function (n) { setV(id, n); update(); }, num(id))]));
+    });
+    function update() {
+      var allC = RATING_KEYS.every(function (k) { return num("d" + day + "_c_" + k[0]) !== null; });
+      var allP = RATING_KEYS.every(function (k) { return num("d" + day + "_p_" + k[0]) !== null; });
+      pBtn.style.display = (allC && pBlock.style.display === "none") ? "inline-flex" : "none";
+      cmp.innerHTML = "";
+      if (allC && allP) {
+        var t = h("table", { class: "cmp" }, [h("tr", null, [h("th", { text: "" }), h("th", { text: "Me" }), h("th", { text: "Parent" }), h("th", { text: "Gap" })])]);
+        var big = [];
+        RATING_KEYS.forEach(function (k) {
+          var c = num("d" + day + "_c_" + k[0]), p = num("d" + day + "_p_" + k[0]), g = Math.abs(c - p);
+          if (g >= 2) big.push(k[1].toLowerCase());
+          t.appendChild(h("tr", null, [h("td", { text: k[1] }), h("td", { text: String(c) }), h("td", { text: String(p) }), h("td", { text: g === 0 ? "same" : String(g), class: g >= 2 ? "dn" : "same" })]));
+        });
+        cmp.appendChild(t);
+        cmp.appendChild(h("div", { class: "result", text: big.length ? "Biggest gap: " + big.join(", ") + ". Talk about it: what does each of you see?" : "Your numbers are close. Talk about what makes them match." }));
+      }
+    }
+    w.appendChild(cBlock); w.appendChild(pBtn); w.appendChild(pBlock); w.appendChild(cmp);
+    if (RATING_KEYS.some(function (k) { return num("d" + day + "_p_" + k[0]) !== null; })) { pBlock.style.display = "block"; }
+    update();
+    if (withTalk) {
+      var goal = h("div", { class: "field", style: "margin-top:12px" }, [h("label", { text: "My Brain Goal for this week" }), h("input", { type: "text", value: txt("d1_goal"), oninput: function (e) { setV("d1_goal", e.target.value); } })]);
+      w.appendChild(goal);
+    }
+    return w;
+  }
+
+  function guessInput(day) {
+    var id = "d" + day + "_guess";
+    return h("div", { class: "widget" }, [
+      h("h4", { text: "First, your guess" }),
+      h("div", { class: "field" }, [h("label", { text: "How many minutes do I think I can focus before my mind wanders?" }), h("input", { type: "number", inputmode: "decimal", min: "0", value: txt(id), oninput: function (e) { setV(id, e.target.value); } })])
+    ]);
+  }
+  function guessNote() { return h("p", { class: "small", text: "Setup for the Focus Stretch below: phone in another room, a clear desk, and a glass of water." }); }
+
+  function focusWidget(day, firstTime) {
+    var total = FAST ? 15 : 900, scale = FAST ? 60 : 1; // FAST mode: 15 seconds standing in for 15 minutes
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "The Focus Stretch (15 minutes)" }));
+    w.appendChild(h("p", { class: "small", text: "Start your one study task, then tap Start. Tap the orange button every time you notice your mind wander. Parent: tap yours every time you see your child drift. The timer keeps going." }));
+    var timer = h("div", { class: "bigtime", text: fmt(total) }), out = h("div"), pullBox = h("div");
+    var running = false, t0 = 0, iv = null, wanders = [], pcount = 0;
+    var cLabel = h("span", { text: "0" }), pLabel = h("span", { text: "0" });
+    var start = h("button", { type: "button", class: "btn big", text: "Start the 15 minutes", onclick: begin });
+    var cBtn = h("button", { type: "button", class: "btn wander", style: "display:none", onclick: function () { if (!running) return; wanders.push((Date.now() - t0) / 1000); cLabel.textContent = String(wanders.length); } }, ["🙋 My mind wandered (", cLabel, ")"]);
+    var pBtn = h("button", { type: "button", class: "btn ghost", style: "display:none", onclick: function () { if (!running) return; pcount++; pLabel.textContent = String(pcount); } }, ["👀 Parent: I saw a drift (", pLabel, ")"]);
+    var stop = h("button", { type: "button", class: "btn ghost", style: "display:none", text: "Stop early", onclick: function () { finish(); } });
+    function begin() {
+      running = true; wanders = []; pcount = 0; cLabel.textContent = "0"; pLabel.textContent = "0"; out.innerHTML = ""; pullBox.innerHTML = "";
+      t0 = Date.now(); start.style.display = "none"; cBtn.style.display = pBtn.style.display = stop.style.display = "inline-flex";
+      iv = setInterval(function () { var left = total - (Date.now() - t0) / 1000; timer.textContent = fmt(left); if (left <= 0) finish(); }, 250);
+    }
+    function finish() {
+      if (!running) return; running = false; clearInterval(iv); beep();
+      var elapsed = Math.min((Date.now() - t0) / 1000, total);
+      var first = wanders.length ? wanders[0] : elapsed;
+      var firstMin = Math.round(first * scale / 6) / 10, count = wanders.length;
+      setV("d" + day + "_first", firstMin); setV("d" + day + "_count", count); setV("d" + day + "_pcount", pcount);
+      cBtn.style.display = pBtn.style.display = stop.style.display = "none"; start.style.display = "inline-flex"; start.textContent = "Do it again"; timer.textContent = fmt(total);
+      showResult(firstMin, count, pcount, !wanders.length);
+      if (firstTime) pullChips();
+    }
+    function showResult(firstMin, count, p, none) {
+      out.innerHTML = "";
+      var line = none ? "You did not tap at all, and your parent saw " + p + " drift" + (p === 1 ? "" : "s") + "." : "Your first wander was after <b>" + firstMin + " minutes</b>. You noticed <b>" + count + "</b> wander" + (count === 1 ? "" : "s") + ", and your parent saw <b>" + p + "</b>.";
+      var insight = p > count ? " Your parent noticed more than you did, which means some wandering happens without you noticing. Noticing is the first skill of focus." : (count > p ? " You noticed more than your parent saw, which means you are already good at catching your own mind." : "");
+      out.appendChild(h("div", { class: "result", html: line + insight }));
+      if (!firstTime && num("d2_first") !== null) {
+        out.appendChild(h("div", { class: "result", html: "Day 2 was <b>" + num("d2_first") + " minutes</b> to the first wander and <b>" + num("d2_count") + "</b> wanders. Today is <b>" + firstMin + "</b> minutes and <b>" + count + "</b> wanders." }));
+      }
+    }
+    function pullChips() {
+      pullBox.innerHTML = ""; pullBox.appendChild(h("p", { class: "small", text: "What pulled your mind away the most?" }));
+      var chips = h("div", { class: "chips" });
+      ["A sound", "My own thoughts", "My body (hungry, sleepy)", "A phone or screen", "Something else"].forEach(function (o) {
+        var c = h("button", { type: "button", class: "chip" + (txt("d2_pull") === o ? " on" : ""), text: o, onclick: function () { setV("d2_pull", o); Array.prototype.forEach.call(chips.children, function (x) { x.classList.toggle("on", x === c); }); } });
+        chips.appendChild(c);
+      });
+      pullBox.appendChild(chips);
+    }
+    w.appendChild(timer); w.appendChild(start); w.appendChild(cBtn); w.appendChild(pBtn); w.appendChild(stop); w.appendChild(out); w.appendChild(pullBox);
+    if (num("d" + day + "_first") !== null) { showResult(num("d" + day + "_first"), num("d" + day + "_count") || 0, num("d" + day + "_pcount") || 0, false); if (firstTime) pullChips(); }
+    return w;
+  }
+
+  function handWidget(day, instruction, short) {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "The Other Hand" }));
+    w.appendChild(h("p", { class: "small", text: instruction }));
+    var t0 = 0, iv = null, run = false;
+    var clock = h("div", { class: "bigtime", text: "0:00" }), res = h("div");
+    var btn = h("button", { type: "button", class: "btn big", text: "Start", onclick: function () {
+      if (!run) { run = true; t0 = Date.now(); btn.textContent = "Stop"; iv = setInterval(function () { clock.textContent = fmt((Date.now() - t0) / 1000); }, 250); }
+      else { run = false; clearInterval(iv); var s = Math.max(1, Math.round((Date.now() - t0) / 1000)); setV("d" + day + "_sec", s); btn.textContent = "Do it again"; paint(); }
+    } });
+    var neatId = "d" + day + "_neat";
+    var neat = h("div", { class: "rate-row" }, [h("div", { class: "rate-label", text: "How neat does it look? (1 = very messy, 5 = very neat)" }), seg(function (n) { setV(neatId, n); }, num(neatId))]);
+    function paint() {
+      res.innerHTML = "";
+      var s = num("d" + day + "_sec");
+      if (s !== null) {
+        var extra = (day !== 3 && num("d3_sec") !== null) ? " Day 3 was " + num("d3_sec") + " seconds." : "";
+        res.appendChild(h("div", { class: "result", html: "Time: <b>" + s + (s === 1 ? " second" : " seconds") + "</b>." + extra }));
+      }
+    }
+    w.appendChild(clock); w.appendChild(btn); w.appendChild(res); w.appendChild(neat);
+    paint();
+    return w;
+  }
+
+  function trayWidget() {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "The Tray Test" }));
+    w.appendChild(h("p", { class: "small", text: "You will see 10 things for 20 seconds. Then pick the ones you remember from a bigger set." }));
+    var stage = h("div"), res = h("div");
+    var showSec = FAST ? 3 : 20;
+    function round(setKey, scoreId, onPurpose) {
+      stage.innerHTML = "";
+      var items = TRAYS[setKey].show, extra = TRAYS[setKey].extra;
+      var info = h("p", { class: "small", text: onPurpose ? "This time look on purpose. For each thing ask: what colour, what shape, where on the screen? Say its name quietly." : "Just look at them, the way you normally would." });
+      var left = showSec, cnt = h("div", { class: "bigtime", text: String(left) });
+      var grid = h("div", { class: "tiles" }, items.map(function (it) { return h("div", { class: "tile" }, [h("span", { class: "e", text: it[0] }), h("span", { class: "n", text: it[1] })]); }));
+      stage.appendChild(info); stage.appendChild(cnt); stage.appendChild(grid);
+      var iv = setInterval(function () { left--; cnt.textContent = String(Math.max(left, 0)); if (left <= 0) { clearInterval(iv); pick(); } }, 1000);
+      function pick() {
+        stage.innerHTML = "";
+        stage.appendChild(h("p", { class: "small", text: "Which things did you see? Tap every one you remember, then tap Check." }));
+        var choices = shuffle(items.concat(extra)), picked = {};
+        var g = h("div", { class: "tiles" });
+        choices.forEach(function (it) {
+          var b = h("button", { type: "button", class: "tile", onclick: function () { picked[it[1]] = !picked[it[1]]; b.classList.toggle("sel", !!picked[it[1]]); } }, [h("span", { class: "e", text: it[0] }), h("span", { class: "n", text: it[1] })]);
+          b.dataset.name = it[1]; g.appendChild(b);
+        });
+        var check = h("button", { type: "button", class: "btn big", text: "Check", onclick: function () {
+          var names = items.map(function (i) { return i[1]; }), right = 0, wrong = 0;
+          Array.prototype.forEach.call(g.children, function (b) {
+            var nm = b.dataset.name, was = names.indexOf(nm) >= 0;
+            if (picked[nm]) { if (was) { right++; b.classList.add("right"); } else { wrong++; b.classList.add("wrong"); } }
+            else if (was) { b.classList.add("right"); }
+            b.disabled = true;
+          });
+          setV(scoreId, right); check.style.display = "none";
+          stage.appendChild(h("div", { class: "result", html: "You remembered <b>" + right + " out of 10</b>" + (wrong ? " (and picked " + wrong + " that were not there)" : "") + ". Green borders were really there." }));
+          paintRes();
+        } });
+        stage.appendChild(g); stage.appendChild(check);
+      }
+    }
+    var r1 = h("button", { type: "button", class: "btn", text: "Round 1: just look", onclick: function () { r1.style.display = "none"; round("A", "d4_t1", false); } });
+    var r2 = h("button", { type: "button", class: "btn", text: "Round 2: look on purpose", onclick: function () { r2.style.display = "none"; round("B", "d4_t2", true); } });
+    function paintRes() {
+      res.innerHTML = "";
+      var a = num("d4_t1"), b = num("d4_t2");
+      if (a !== null && b !== null) {
+        res.appendChild(h("div", { class: "result", html: "Round 1 (just looking): <b>" + a + "/10</b>. Round 2 (on purpose): <b>" + b + "/10</b>. " + (b > a ? "Same time, same memory, and a higher score. What changed was how much attention you gave." : (b === a ? "The same score, so try asking the three questions out loud next time and see what happens." : "Round 2 was lower this time. That happens, and it tells you attention is not automatic.")) }));
+      }
+    }
+    w.appendChild(h("div", null, [r1, r2])); w.appendChild(stage); w.appendChild(res);
+    if (num("d4_t1") !== null) r1.style.display = "none";
+    if (num("d4_t2") !== null) r2.style.display = "none";
+    paintRes();
+    return w;
+  }
+
+  function scoreWords(text, words) {
+    var tokens = (text.toLowerCase().match(/[a-z]+/g) || []);
+    var found = [], missed = [];
+    words.forEach(function (wd) {
+      var l = wd.toLowerCase(), stem = l.replace(/s$/, "");
+      var ok = tokens.some(function (t) { return t === l || t === l + "s" || t === l + "es" || (stem.length >= 4 && t === stem); });
+      (ok ? found : missed).push(wd);
+    });
+    return { found: found, missed: missed };
+  }
+
+  function recallBlock(words, onScore, hint) {
+    var box = h("div"), ta = h("textarea", { placeholder: "Type the words you remember, with a space or comma between them" }), res = h("div");
+    var chk = h("button", { type: "button", class: "btn", text: "Check my score", onclick: function () {
+      var r = scoreWords(ta.value, words);
+      res.innerHTML = ""; res.appendChild(h("div", { class: "result", html: "You remembered <b>" + r.found.length + " out of " + words.length + "</b>." + (r.missed.length ? " Missed: " + r.missed.join(", ") + "." : " You got every one.") }));
+      onScore(r.found.length, r, ta.value);
+    } });
+    if (hint) box.appendChild(h("p", { class: "small", text: hint }));
+    box.appendChild(ta); box.appendChild(chk); box.appendChild(res);
+    return { el: box, ta: ta, res: res };
+  }
+
+  function recallWidget(cfg) {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: cfg.title }));
+    var rb = recallBlock(cfg.words, function (n, r, t) {
+      setV(cfg.scoreId, n); setV(cfg.scoreId + "_text", t);
+      var since = num(cfg.sinceId || "");
+      if (since !== null) { var hrs = Math.round((Date.now() - since) / 3600000); setV(cfg.scoreId + "_hrs", hrs); rb.res.appendChild(h("div", { class: "small", text: "That was about " + hrs + " hours after you first saw the words." })); }
+    }, cfg.hint);
+    w.appendChild(rb.el);
+    if (num(cfg.scoreId) !== null) { rb.ta.value = txt(cfg.scoreId + "_text"); rb.res.appendChild(h("div", { class: "result", html: "Saved: <b>" + num(cfg.scoreId) + " out of " + cfg.words.length + "</b>." })); }
+    return w;
+  }
+
+  function wordTestWidget(cfg) {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: cfg.story ? "The Story Test: List B" : "The Forgetting Test: List A" }));
+    w.appendChild(h("p", { class: "small", text: cfg.story ? "You will see 10 words, one at a time. Then you get 2 minutes to link them into one silly story. Then you type what you remember." : "You will see 10 words, one at a time. Then you type what you remember. Please do not write them down." }));
+    var voice = h("input", { type: "checkbox", id: "voice-" + cfg.key }); voice.checked = canSpeak;
+    var vLabel = h("label", { for: "voice-" + cfg.key, text: " Say the words out loud as they appear" });
+    var vWrap = h("div", { class: "small" }, [voice, vLabel]); if (!canSpeak) vWrap.style.display = "none";
+    var stage = h("div"), startBtn = h("button", { type: "button", class: "btn big", text: "Show me the words", onclick: run });
+    var wordMs = FAST ? 400 : 2500;
+    function run() {
+      startBtn.style.display = "none"; vWrap.style.display = "none"; stage.innerHTML = "";
+      var i = 0, big = h("div", { class: "bigword", text: "Get ready…" }), dots = h("div", { class: "dots", text: "" });
+      stage.appendChild(big); stage.appendChild(dots);
+      setTimeout(function next() {
+        if (i >= cfg.words.length) { afterWords(); return; }
+        big.textContent = cfg.words[i]; if (voice.checked) say(cfg.words[i]);
+        dots.textContent = Array(cfg.words.length).fill(0).map(function (_, k) { return k <= i ? "●" : "○"; }).join(" ");
+        i++; setTimeout(next, wordMs);
+      }, 1200);
+    }
+    function afterWords() {
+      stage.innerHTML = "";
+      if (cfg.story) {
+        var left = FAST ? 6 : 120;
+        stage.appendChild(h("p", { class: "small", text: "Here are the words again. Link them into one story, as silly and colourful as you can, in your head or in the box below. You have two minutes." }));
+        stage.appendChild(h("div", { class: "result", text: cfg.words.join("  →  ") }));
+        var t = h("div", { class: "bigtime", text: fmt(left) }), ta = h("textarea", { placeholder: "Optional: write your story here", oninput: function (e) { setV("d6_story", e.target.value); } });
+        ta.value = txt("d6_story");
+        stage.appendChild(t); stage.appendChild(ta);
+        var go = h("button", { type: "button", class: "btn big", text: "I'm ready to recall", onclick: recall });
+        stage.appendChild(go);
+        var iv = setInterval(function () { left--; t.textContent = fmt(left); if (left <= 0) { clearInterval(iv); beep(); } }, 1000);
+        go.addEventListener("click", function () { clearInterval(iv); });
+      } else { recall(); }
+    }
+    function recall() {
+      stage.innerHTML = "";
+      var rb = recallBlock(cfg.words, function (n, r, t) { setV(cfg.scoreId, n); setV(cfg.scoreId + "_text", t); setV(cfg.scoreId + "_t", Date.now()); }, "Now type every word you remember. Do not look back.");
+      stage.appendChild(rb.el);
+      if (cfg.strategyId) {
+        stage.appendChild(h("p", { class: "small", text: "What did your head do to try to remember?" }));
+        var chips = h("div", { class: "chips" });
+        ["Pictured them", "Repeated them", "Said them out loud", "Nothing special", "Something else"].forEach(function (o) {
+          var c = h("button", { type: "button", class: "chip" + (txt(cfg.strategyId) === o ? " on" : ""), text: o, onclick: function () { setV(cfg.strategyId, o); Array.prototype.forEach.call(chips.children, function (x) { x.classList.toggle("on", x === c); }); } });
+          chips.appendChild(c);
+        });
+        stage.appendChild(chips);
+        stage.appendChild(h("div", { class: "result", text: "Now please do not look at these words again. Tomorrow morning, open Day 6 first and do the Morning Check." }));
+      } else {
+        stage.appendChild(h("div", { class: "result", text: "Tomorrow morning, open Day 7 first and do the Morning Check to see how many of these words stayed overnight." }));
+      }
+    }
+    w.appendChild(vWrap); w.appendChild(startBtn); w.appendChild(stage);
+    if (num(cfg.scoreId) !== null) {
+      startBtn.style.display = "none"; vWrap.style.display = "none"; recall();
+      var ta0 = stage.querySelector("textarea"); if (ta0) ta0.value = txt(cfg.scoreId + "_text");
+      stage.insertBefore(h("div", { class: "result", html: "Saved score: <b>" + num(cfg.scoreId) + " out of " + cfg.words.length + "</b>." }), stage.firstChild);
+    }
+    return w;
+  }
+
+  function replayWidget(day) {
+    var id = "d" + day + "_replay", w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "The Day Replay" + (day === 0 ? " (tonight, before bed)" : " (this evening)") }));
+    w.appendChild(h("p", { class: "small", text: "Sit or lie down comfortably. Tell your parent everything that happened today, from the moment you woke up until now, in the right order. Take your time. Parent: listen, and tap +1 for every separate thing your child mentions (waking up, brushing teeth, the school bus, a lesson, lunch, and so on)." }));
+    var num0 = h("div", { class: "bigtime", text: String(num(id) || 0) }), res = h("div");
+    function set(v) { v = Math.max(0, v); setV(id, v); num0.textContent = String(v); paint(); }
+    var plus = h("button", { type: "button", class: "btn big", text: "+1 thing", onclick: function () { set((num(id) || 0) + 1); } });
+    var minus = h("button", { type: "button", class: "btn ghost", text: "−1 (tapped by mistake)", onclick: function () { set((num(id) || 0) - 1); } });
+    var chips = h("div", { class: "chips" });
+    ["Morning", "School or classes", "Afternoon", "Evening", "Nothing was blurry"].forEach(function (o) {
+      var c = h("button", { type: "button", class: "chip" + (txt("d" + day + "_blurry") === o ? " on" : ""), text: o, onclick: function () { setV("d" + day + "_blurry", o); Array.prototype.forEach.call(chips.children, function (x) { x.classList.toggle("on", x === c); }); } });
+      chips.appendChild(c);
+    });
+    var easeId = "d" + day + "_replay_easy";
+    var ease = h("div", { class: "rate-row" }, [h("div", { class: "rate-label", text: "How easy was it to replay my day? (1 = very hard, 5 = very easy)" }), seg(function (n) { setV(easeId, n); }, num(easeId))]);
+    function paint() {
+      res.innerHTML = "";
+      var c = num(id);
+      if (c !== null && c > 0) {
+        var cmp = (day !== 0 && num("d0_replay") !== null) ? " On Day 0 you replayed " + num("d0_replay") + " things." : "";
+        res.appendChild(h("div", { class: "result", html: "You replayed <b>" + c + " thing" + (c === 1 ? "" : "s") + "</b> from your day." + cmp }));
+      }
+    }
+    w.appendChild(num0); w.appendChild(plus); w.appendChild(minus); w.appendChild(res);
+    w.appendChild(h("p", { class: "small", text: "Which part of the day was the most blurry?" })); w.appendChild(chips); w.appendChild(ease);
+    paint();
+    return w;
+  }
+
+  function questionsWidget() {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "My 3 big questions about my brain" }));
+    w.appendChild(h("p", { class: "small", text: "What would you most like to know about your brain? Write three questions. On Day 7 you will look back and see what you found out." }));
+    [1, 2, 3].forEach(function (i) {
+      var id = "d0_q" + i;
+      w.appendChild(h("div", { class: "field", style: "margin-top:8px" }, [h("label", { text: "Question " + i }), h("input", { type: "text", value: txt(id), placeholder: i === 1 ? "For example: Why do I forget what I just read?" : "", oninput: function (e) { setV(id, e.target.value); } })]));
+    });
+    return w;
+  }
+
+  function setupWidget() {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "Get your brain ready for sleep" }));
+    w.appendChild(h("p", { class: "small", text: "Tick each one as you do it tonight." }));
+    [["d0_setup1", "Screens and phone off at least 30 minutes before I sleep"], ["d0_setup2", "Phone charging outside my bed, if possible"], ["d0_setup3", "A glass of water next to my bed"]].forEach(function (s) {
+      var cb = h("input", { type: "checkbox", id: s[0], style: "width:auto" }); cb.checked = txt(s[0]) === "1";
+      cb.addEventListener("change", function () { setV(s[0], cb.checked ? "1" : "0"); });
+      w.appendChild(h("div", { class: "small", style: "margin:8px 0;display:flex;gap:10px;align-items:center" }, [cb, h("label", { for: s[0], text: s[1] })]));
+    });
+    w.appendChild(h("p", { class: "small", text: "Tomorrow, the Brain Diary will ask you how many hours you slept. Try to notice when you fall asleep and when you wake up." }));
+    return w;
+  }
+
+  function questionsReviewWidget() {
+    var w = h("div", { class: "widget" });
+    w.appendChild(h("h4", { text: "Did I find out what I wanted to know?" }));
+    var any = false;
+    [1, 2, 3].forEach(function (i) {
+      var q = txt("d0_q" + i); if (!q) return; any = true;
+      var id = "d7_a" + i, ta = h("textarea", { oninput: function (e) { setV(id, e.target.value); } }); ta.value = txt(id);
+      w.appendChild(h("div", { class: "field", style: "margin-top:8px" }, [h("label", { text: "On Day 0 I asked: " + q }), ta]));
+    });
+    if (!any) w.appendChild(h("p", { class: "small", text: "You did not write any questions on Day 0, so take a minute now: what is one thing you now know about your brain that you did not know a week ago?" }));
+    else w.appendChild(h("p", { class: "small", text: "Write what you found out. It is fine if a question is still open, because that is how science works." }));
+    return w;
+  }
+
+  function diaryWidget(n) {
+    function f(id, label, min, max, step) { return h("div", { class: "field" }, [h("label", { text: label }), h("input", { type: "number", inputmode: "decimal", min: String(min), max: String(max), step: String(step), value: txt(id), oninput: function (e) { setV(id, e.target.value); } })]); }
+    return h("div", { class: "grid" }, [f("d" + n + "_sleep", "Hours I slept last night", 0, 14, 0.5), f("d" + n + "_screen", "Screen time today (hours)", 0, 16, 0.5), f("d" + n + "_sharp", "How sharp did my brain feel? (1-5)", 1, 5, 1)]);
+  }
+
+  /* ===================== report ===================== */
+  function delta(a, b, hib) {
+    if (a === null || b === null) return '<span class="same">–</span>';
+    var d = Math.round((b - a) * 10) / 10;
+    if (d === 0) return '<span class="same">no change</span>';
+    var good = hib ? d > 0 : d < 0;
+    return '<span class="' + (good ? "up" : "dn") + '">' + (d > 0 ? "+" : "") + d + "</span>";
+  }
+  function cell(x) { return x === null ? "–" : String(x); }
+  function row(label, a, b, hib) { return "<tr><td>" + label + "</td><td>" + cell(a) + "</td><td>" + cell(b) + "</td><td>" + delta(a, b, hib) + "</td></tr>"; }
+  function tbl(head, body) { return '<table class="report"><tr><th>' + head + "</th><th>Before</th><th>After</th><th>Change</th></tr>" + body + "</table>"; }
+  function buildReport() {
+    var m = "";
+    RATING_KEYS.forEach(function (k) { m += row(k[1] + " (me)", num("d1_c_" + k[0]), num("d7_c_" + k[0]), true); });
+    RATING_KEYS.forEach(function (k) { m += row(k[1] + " (parent)", num("d1_p_" + k[0]), num("d7_p_" + k[0]), true); });
+    var focus = row("Minutes until first wander", num("d2_first"), num("d7_first"), true) + row("Wanders I noticed", num("d2_count"), num("d7_count"), false) + row("Wanders my parent saw", num("d2_pcount"), num("d7_pcount"), false);
+    var hand = row("Seconds for 3 names", num("d3_sec"), num("d7_sec"), false) + row("Neatness (1-5)", num("d3_neat"), num("d7_neat"), true);
+    var mem = row("Right after (no method → story method)", num("d5_a1"), num("d6_b1"), true) + row("The morning after (no method → story method)", num("d6_a24"), num("d7_b24"), true);
+    var tray = row("Tray test: just looking → on purpose", num("d4_t1"), num("d4_t2"), true);
+    var replay = row("Things I replayed from my day", num("d0_replay"), num("d7_replay"), true) + row("How easy it felt (1-5)", num("d0_replay_easy"), num("d7_replay_easy"), true);
+    var best = null, worst = null;
+    for (var i = 0; i <= 7; i++) { var s = num("d" + i + "_sharp"); if (s === null) continue; if (!best || s > best.s) best = { i: i, s: s }; if (!worst || s < worst.s) worst = { i: i, s: s }; }
+    function dl(x) { return "Day " + x.i + " (sharpness " + x.s + ", slept " + cell(num("d" + x.i + "_sleep")) + " h, screens " + cell(num("d" + x.i + "_screen")) + " h)"; }
+    var pat = (best && worst && best.i !== worst.i) ? "<p><b>Sharpest day:</b> " + dl(best) + "<br><b>Foggiest day:</b> " + dl(worst) + "<br><span class='small'>What was different about those two days?</span></p>" : "<p class='small'>Fill in the Brain Diary on at least two days to see your sharpest and foggiest day side by side.</p>";
+    var goal = txt("d1_goal") ? "<p><b>My Brain Goal:</b> " + esc(txt("d1_goal")) + "</p>" : "";
+    return goal + "<h3 class='sec'>The Mirror (Day 1 → Day 7)</h3>" + tbl("Rating", m) + "<h3 class='sec'>The Focus Stretch (Day 2 → Day 7)</h3>" + tbl("Measure", focus) +
+      "<h3 class='sec'>The Other Hand (Day 3 → Day 7)</h3>" + tbl("Measure", hand) + "<h3 class='sec'>Memory</h3>" + tbl("Measure", mem) + tbl("Measure", tray) + "<h3 class='sec'>The Day Replay (Day 0 → Day 7)</h3>" + tbl("Measure", replay) +
+      "<h3 class='sec'>My Brain Diary pattern</h3>" + pat +
+      "<p class='small'>A number that went up means your brain responded to practice. No change means that area needs a new tool, which we begin next week. A drop is not a failure, because it shows exactly where to start.</p>";
+  }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function reportText() {
+    function l(a, x, y) { return a + ": " + (x === null ? "-" : x) + " → " + (y === null ? "-" : y) + "\n"; }
+    return "My Brain Report (Know Your Brain Challenge)\n" + l("Focus Stretch, minutes to first wander", num("d2_first"), num("d7_first")) + l("Focus Stretch, wanders I noticed", num("d2_count"), num("d7_count")) +
+      l("Other Hand, seconds for 3 names", num("d3_sec"), num("d7_sec")) + l("Memory the morning after (no method → story)", num("d6_a24"), num("d7_b24")) + l("Tray test (just looking → on purpose)", num("d4_t1"), num("d4_t2")) + l("Day Replay, things remembered", num("d0_replay"), num("d7_replay"));
+  }
+  function refreshReport() { var r = document.getElementById("report"); if (r) r.innerHTML = buildReport(); }
+
+  /* ===================== page ===================== */
+  var container = document.getElementById("days"), lockSubs = {};
+  var activeDay = -1; // the day the family should do next
+  for (var q = 0; q <= 7; q++) { if (isOpen(q) && !isDone(q)) { activeDay = q; break; } }
+  function lockText(n) {
+    var prev = data.done[n - 1];
+    if (!prev) return "Finish Day " + (n - 1) + " and tap the green button at the bottom. This day then opens the next morning.";
+    return "Opens tomorrow morning.";
+  }
+  Object.keys(LESSONS).map(Number).forEach(function (n) {
+    var L = LESSONS[n];
+    var isUnlocked = isOpen(n), isToday = n === activeDay;
+    var label = n === 0 ? "TONIGHT" : "DAY " + String(n).padStart(2, "0");
+    var el = h("div", { class: "day " + (isUnlocked ? "available" : "locked") + (L.report ? " report-day" : "") });
+    if (!isUnlocked) {
+      lockSubs[n] = h("p", { class: "day-sub", text: lockText(n) });
+      el.appendChild(h("div", { class: "day-head" }, [h("span", { class: "day-num", text: label }), h("div", { class: "day-body" }, [h("p", { class: "day-title", text: L.title }), lockSubs[n]]), h("span", { class: "lock", text: "🔒" })]));
+      container.appendChild(el); return;
+    }
+    var donePill = h("span", { class: "pill pill-done", text: "Done", style: "display:none" });
+    var head = h("button", { type: "button", class: "day-head", "aria-expanded": "false" }, [
+      h("span", { class: "day-num", text: label }), h("span", { class: "day-icon", text: L.icon }),
+      h("div", { class: "day-body" }, [h("p", { class: "day-title" }, [L.title, isToday ? h("span", { class: "pill pill-today", text: n === 0 ? "Tonight" : "Up next" }) : null, donePill]), h("p", { class: "day-sub", text: L.sub })]),
+      h("span", { class: "day-sub", text: "▾" })]);
+    var detail = h("div", { class: "day-detail" });
+
+    // 1. Learn
+    var lesson = h("div", { class: "lesson" });
+    L.paras.forEach(function (p) { lesson.appendChild(h("p", { text: p })); });
+    if (L.fact) lesson.appendChild(h("div", { class: "fact", text: L.fact }));
+    detail.appendChild(h("h3", { class: "sec" }, [h("span", { class: "step", text: "1" }), "Today's lesson"]));
+    if (canSpeak) {
+      var speaking = false;
+      var rb = h("button", { type: "button", class: "btn ghost no-print", text: "🔊 Read this to me", onclick: function () {
+        if (speaking) { window.speechSynthesis.cancel(); speaking = false; rb.textContent = "🔊 Read this to me"; return; }
+        window.speechSynthesis.cancel(); speaking = true; rb.textContent = "⏹ Stop reading";
+        var u = new SpeechSynthesisUtterance(L.paras.join(" ")); u.lang = "en-IN"; u.rate = 0.92; u.onend = function () { speaking = false; rb.textContent = "🔊 Read this to me"; };
+        window.speechSynthesis.speak(u);
+      } });
+      detail.appendChild(rb);
+    }
+    detail.appendChild(lesson);
+
+    // 2. Mission
+    var mission = L.mission(n);
+    if (mission.length) {
+      detail.appendChild(h("h3", { class: "sec" }, [h("span", { class: "step", text: "2" }), "Today's mission"]));
+      mission.forEach(function (m) { detail.appendChild(m); });
+    }
+
+    // Parent
+    var pc = h("div", { class: "parent" }, [h("p", null, [h("b", { text: "For the parent: " + L.parentTitle })])]);
+    L.parent.forEach(function (t) { pc.appendChild(h("p", { text: t })); });
+    detail.appendChild(pc);
+
+    // 3. Reflect + diary
+    if (!L.noDiary) {
+      detail.appendChild(h("h3", { class: "sec" }, [h("span", { class: "step", text: mission.length ? "3" : "2" }), "Think about it"]));
+      var rid = "d" + n + "_reflect";
+      detail.appendChild(h("div", { class: "field" }, [h("label", { text: "What did I notice about my brain today?" }), h("textarea", { oninput: function (e) { setV(rid, e.target.value); }, value: txt(rid) })]));
+      var ta = detail.lastChild.querySelector("textarea"); ta.value = txt(rid);
+      detail.appendChild(h("h3", { class: "sec" }, [h("span", { class: "step", text: "✓" }), "Brain Diary (tonight, 1 minute)"]));
+      detail.appendChild(diaryWidget(n));
+    }
+
+    // Day 7 extras
+    if (L.report) {
+      detail.appendChild(h("div", { class: "grid", style: "margin-top:14px" }, [
+        h("div", { class: "field wide" }, [h("label", { text: "Three things I learned about my brain" }), (function () { var t = h("textarea", { oninput: function (e) { setV("d7_learn", e.target.value); } }); t.value = txt("d7_learn"); return t; })()]),
+        h("div", { class: "field wide" }, [h("label", { text: "Three things my parent noticed about me" }), (function () { var t = h("textarea", { oninput: function (e) { setV("d7_noticed", e.target.value); } }); t.value = txt("d7_noticed"); return t; })()])
+      ]));
+      detail.appendChild(h("h3", { class: "sec" }, [h("span", { class: "step", text: "★" }), "My Brain Report"]));
+      detail.appendChild(h("div", { id: "report" }));
+      detail.appendChild(h("div", { class: "tools" }, [
+        h("button", { type: "button", class: "btn", text: "Print or save as PDF", onclick: function () { el.classList.add("open"); window.print(); } }),
+        h("button", { type: "button", class: "btn ghost", text: "Send my report on WhatsApp", onclick: function () { window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(reportText()), "_blank", "noopener"); } })]));
+    }
+
+    var nextNote = n < 7 ? "When you tap this, Day " + (n + 1) + " opens tomorrow morning." : "This completes the challenge.";
+    var doneBtn = h("button", { type: "button", class: "btn big no-print", text: "I have finished this day" });
+    function paintDone() {
+      var on = !!data.done[n];
+      doneBtn.textContent = on ? "✓ Finished. Tap to undo" : "I have finished this day";
+      doneBtn.className = "btn no-print " + (on ? "ghost" : "big");
+      donePill.style.display = on ? "inline" : "none";
+      if (lockSubs[n + 1]) lockSubs[n + 1].textContent = on ? "Opens tomorrow morning." : lockText(n + 1);
+      updateProgress();
+    }
+    doneBtn.addEventListener("click", function () { if (data.done[n]) delete data.done[n]; else data.done[n] = todayStr; save(); paintDone(); });
+    detail.appendChild(h("div", { style: "margin-top:22px" }, [doneBtn, h("p", { class: "small no-print", text: nextNote })]));
+
+    el.appendChild(head); el.appendChild(detail); container.appendChild(el);
+    head.addEventListener("click", function () { var open = el.classList.toggle("open"); head.setAttribute("aria-expanded", open); });
+    if (isToday) { el.classList.add("open"); head.setAttribute("aria-expanded", "true"); }
+    paintDone();
+    if (L.report) refreshReport();
+  });
+
+  function updateProgress() {
+    var doneCount = Object.keys(data.done).filter(function (k) { return data.done[k] && Number(k) >= 1; }).length;
+    document.getElementById("progress-fill").style.width = (doneCount / 7 * 100) + "%";
+    document.getElementById("progress-label").textContent = (isDone(0) ? "Tonight's activity done · " : "") + doneCount + " of 7 days done";
+  }
+  updateProgress();
+})();
+</script>
+</body>
+</html>
